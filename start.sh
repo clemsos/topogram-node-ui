@@ -96,7 +96,7 @@ if [ $NODE_HOT_RELOAD -eq 0 ]; then
     NCMD="$NCMD -o $NODE_LOG_DIR/out.log"
     NCMD="$NCMD -e $NODE_LOG_DIR/err.log"
 else
-    NCMD="supervisor -n exit -e html,$NODE_CONFIG_DIR,$NODE_LAUNCH_SCRIPT"
+    NCMD="supervisor -n exit -e jade,html,$NODE_CONFIG_DIR,$NODE_LAUNCH_SCRIPT"
 fi
 
 NCMD="$NCMD $NODE_LAUNCH_SCRIPT"

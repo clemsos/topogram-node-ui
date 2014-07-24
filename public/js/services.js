@@ -41,11 +41,11 @@ app.factory('geoService', function($resource) {
         getData: {method:'GET', isArray: false}
       }),
     "info":
-      $resource("geo/info",{ }, {
+      $resource("/api/geo/info",{ }, {
         getData: {method:'GET', isArray: false}
       }),
       "ratio":
-      $resource("geo/ratio",{ }, {
+      $resource("/api/geo/ratio",{ }, {
         getData: {method:'GET', isArray: false}
       })
 

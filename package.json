@@ -1,5 +1,5 @@
 {
-    "name": "mitras-ui"
+    "name": "topogram-ui"
   , "version": "0.0.1"
   , "private": true
   , "dependencies": {
@@ -10,5 +10,6 @@
     , "mongodb" : "1.4"
     , "monk" : "latest"
     , "d3" : "latest"
+    ,"jade": ">= 0.0.1"
   }
 }

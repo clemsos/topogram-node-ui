@@ -1,0 +1,12 @@
+#timeline.row.well(u='')
+  timeslider#time-slider(model='timeframe', type='text', data-slider-min='0', data-slider-step='1', data-slider-orientation='horizontal', data-slider-selection='after', data-slider-tooltip='show')
+  .time-container(timeserie='', time-data='timeSeriesData', start='start', end='end', meme-name='memeName')
+  p
+    a.btn.btn-default(href='#', ng-click='playAll(); $event.preventDefault()')
+      span.glyphicon.glyphicon-play
+      | Play
+    a.btn.btn-default(href='#', ng-click='stop(); $event.preventDefault()')
+      span.glyphicon.glyphicon-stop
+      | Stop
+    b Start: {{start | date:'medium'}}
+    b End: {{end | date:'medium'}}

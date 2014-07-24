@@ -1,5 +1,57 @@
 // controllers.js
 
+function IndexCtrl($scope, $http) {
+
+  $http.get('/api/memes').
+    success(function(data, status, headers, config) {
+      $scope.posts = data.memes;
+    });
+}
+
+function AddPostCtrl($scope, $http, $location) {
+  $scope.form = {};
+  $scope.submitPost = function () {
+    $http.post('/api/meme', $scope.form).
+      success(function(data) {
+        $location.path('/');
+      });
+  };
+}
+
+function EditPostCtrl($scope, $http, $location, $routeParams) {
+  $scope.form = {};
+  $http.get('/api/meme/' + $routeParams.id).
+    success(function(data) {
+      $scope.form = data.post;
+    });
+
+  $scope.editPost = function () {
+    $http.put('/api/meme/' + $routeParams.id, $scope.form).
+      success(function(data) {
+        $location.url('/readPost/' + $routeParams.id);
+      });
+  };
+}
+
+function DeletePostCtrl($scope, $http, $location, $routeParams) {
+  $http.get('/api/meme/' + $routeParams.id).
+    success(function(data) {
+      $scope.post = data.post;
+    });
+
+  $scope.deletePost = function () {
+    $http.delete('/api/meme/' + $routeParams.id).
+      success(function(data) {
+        $location.url('/');
+      });
+  };
+
+  $scope.home = function () {
+    $location.url('/');
+  };
+}
+
+// Menu
 app.controller('navCtrl', function($scope,config,memeService){
   memeService.list.getData(function(memeList){ 
     $scope.memeList=[];
@@ -50,43 +102,25 @@ app.controller('navCtrl', function($scope,config,memeService){
     var fn="users_"+config.getFilename()
     sv.download(fn);
   }
-
-
 })
 
-app.controller('dataCtrl', function($scope,$http,$location,$timeout,config,dataService){
+// Data
+function ReadPostCtrl($scope, $http, $routeParams) {
+  // console.log($routeParams.id);
+  $http.get('/api/meme/' + $routeParams.id).
+    success(function(data) {
+      $scope.post = data.meme;
+    });
+}
 
-
-  // TODO : fix dirty hack
-  // get location and name
-  // console.log($location.$$absUrl);
-  // var url=getLocation($location.$$absUrl); // default
-  
-  // var safename=url.pathname.slice(1,url.pathname.length);
-  // console.log(safename);
-
-  // if(safename == undefined) safename="biaoge"
-  // // console.log(safename);
-
-  // function getLocation(href) {
-  //   var match = href.match(/^(https?\:)\/\/(([^:\/?#]*)(?:\:([0-9]+))?)(\/[^?#]*)(\?[^#]*|)(#.*|)$/);
-  //   return match && {
-  //       protocol: match[1],
-  //       host: match[2],
-  //       hostname: match[3],
-  //       port: match[4],
-  //       pathname: match[5],
-  //       search: match[6],
-  //       hash: match[7]
-  //   }
-  // }
+app.controller('dataCtrl', function($scope,$http,$routeParams,$location,$timeout,config,dataService){
 
   var safename= "dufu";
   config.setName(safename);   //default
   console.log(safename);
 
 
-  $http.get("/meme/"+config.name+"/times").success(function(_time_data) {
+  $http.get("api/meme/"+$routeParams.id+"/times").success(function(_time_data) {
 
     $scope.memeName=safename;
 
@@ -172,15 +206,15 @@ app.controller('dataCtrl', function($scope,$http,$location,$timeout,config,dataS
   }
   
   $scope.updateData=function () {
-
     
     if($scope.start!=undefined && $scope.end!=undefined && ($scope.prevStart!=$scope.start || $scope.prevEnd!=$scope.end)) {
 
-      var url="/meme/"+safename+"/frames/"+$scope.start+"/"+$scope.end
+      var url="/api/meme/"+$routeParams.id+"/frames/"+$scope.start+"/"+$scope.end
+      console.log(url);
 
       $http.get(url).success(function(_data) {
 
-        // $scope.data=_data;
+        // console.log(_data);;
         dataService.users.nodes=_data.users.nodes 
         dataService.users.edges=_data.users.edges,
         dataService.users.index=_data.users.index,
@@ -201,7 +235,7 @@ app.controller('dataCtrl', function($scope,$http,$location,$timeout,config,dataS
 });
 
 
-app.controller('geoCtrl', function($scope,$http,config,geoService,dataService){
+app.controller('geoCtrl', function($scope,$http,$routeParams,config,geoService,dataService){
   
     $scope.centroidsOnMap=true;
     $scope.memeName=config.name
@@ -219,7 +253,7 @@ app.controller('geoCtrl', function($scope,$http,config,geoService,dataService){
     })
 
     // console.log($scope);
-    $http.get("/meme/"+config.name+"/geoclusters").success(function(_geoclusters_data) {
+    $http.get("/api/meme/"+$routeParams.id+"/geoclusters").success(function(_geoclusters_data) {
       $scope.clusters=_geoclusters_data;
       // $scope.clusters=null;
       $scope.showClusters=true;
@@ -241,7 +275,7 @@ app.controller('geoCtrl', function($scope,$http,config,geoService,dataService){
       $(".geoPath path").toggle();
     }
 
-    $http.get("/meme/"+config.name+"/provincesCount").success(function(_provincesCount_data) {
+    $http.get("/api/meme/"+$routeParams.id+"/provincesCount").success(function(_provincesCount_data) {
       $scope.provincesCount=_provincesCount_data;
     })
     

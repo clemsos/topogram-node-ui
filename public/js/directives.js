@@ -582,6 +582,7 @@ app.directive("map", function () {
                     else centroid.name='Xianggang';
 
                     centroid.type="province";
+                    // console.log($scope.provincesInfo[centroid.name]);
                     centroid.cleanName=$scope.provincesInfo[centroid.name].clean_name
                     centroid.gdp=$scope.provincesInfo[centroid.name].gdp
                     centroid.population=$scope.provincesInfo[centroid.name].population

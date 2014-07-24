@@ -1,0 +1,89 @@
+doctype html
+html(ng-app="topogram")
+  title Topogram
+  meta(charset='utf8')
+  base(href='/')
+  link(href='/css/slider.css', rel='stylesheet')
+  link(href='/css/bootstrap.min.css', rel='stylesheet')
+  link(href='/css/style.css', rel='stylesheet')
+
+body
+  nav.navbar-tools.navbar-default.navbar-tools.navbar-fixed-top.navbar-inverse(role='navigation')
+    //- ng-controller='navCtrl')
+    .container-fluid
+      // Brand and toggle get grouped for better mobile display
+      .navbar-header
+        button.navbar-toggle(type='button', data-toggle='collapse', data-target='#bs-example-navbar-collapse-1')
+          span.sr-only Toggle navigation
+          span.icon-bar
+          span.icon-bar
+          span.icon-bar
+      ul.nav.navbar-nav
+        li
+          a.navbar-brand(href='/') Topogram
+          span.caret
+        li
+          a.btn-memes()
+            // span.glyphicon.glyphicon-comment
+            | Memes
+        li
+          a.btn-userlayout(href='/addPost')
+            // span.glyphicon.glyphicon-globe
+            | Add a new Meme
+        //- li
+          //- a.btn-save(ng-click='saveAll()', type='button')
+          //-   span.glyphicon.glyphicon-save
+          //-   | Save All
+          //-   small (Shift+A)
+      ul.nav.navbar-nav.navbar-right
+        li
+          a(data-toggle='collapse', data-target='#help') Help
+        li
+          a(data-toggle='collapse', data-target='#about') About
+    .container-fluid
+      #memes.panel-collapse.collapse
+        .memelist.row.panel-body
+          .col-sm-2.col-md-2.memethumb.thumbnail.caption(ng-repeat='meme in memeList')
+            p
+              small {{meme.type}}
+              br
+              a(href='/{{meme.safename}}')
+                strong {{meme.name}}
+              br
+              small
+                | Keywords:
+                em {{meme.keywords}}
+              | "
+      #about.panel-collapse.collapse
+        .panel-body
+          h4.panel-title About
+          | blabla
+      #controls.panel-collapse.collapse
+          button.btn.btn-sm.btn-alert.btn-showall(type='button') Show all
+          button.btn.btn-sm.btn-default.btn-centroids(type='button')
+            span.glyphicon.glyphicon-map-marker
+            | List Provinces
+          span.label.label-defualt Sort provinces
+          .btn-group.btn-group-xs
+            button.btn.btn-sm.btn-default.btn-sortCentroids(type='button', rel='meme') Users count
+            button.btn.btn-sm.btn-default.btn-sortCentroids(type='button', rel='gdp') GDP
+            button.btn.btn-sm.btn-default.btn-sortCentroids(type='button', rel='population') Population
+          .btn-group.switchs
+            button.btn.btn-xs.btn-default.btn-arcs(type='button') Arcs
+            button.btn.btn-xs.btn-default.btn-map(type='button') Map
+            button.btn.btn-xs.btn-default.btn-wordusers(type='button') Words Users
+            button.btn.btn-xs.btn-default.btn-mapusers(type='button') Map Users
+    #help.panel-collapse.collapse
+      .panel-heading
+        h4.panel-title Help
+      .panel-body
+        | blabla
+
+  block body
+  // #viz.container-fluid(ng-controller='dataCtrl')
+    //- div(ng-include='"/partials/timeline.html"')
+    //- div(ng-include='"/partials/map.html"')
+    //- div(ng-include='"/partials/words.html"')
+    //- div(ng-include='"/partials/users.html"')
+
+script(type='text/javascript', src='/libs/jquery.min.js')
