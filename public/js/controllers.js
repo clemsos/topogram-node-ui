@@ -57,6 +57,7 @@ app.controller('navCtrl', function($scope,config,memeService){
 app.controller('dataCtrl', function($scope,$http,$location,$timeout,config,dataService){
 
 
+  // TODO : fix dirty hack
   // get location and name
   // console.log($location.$$absUrl);
   var url=getLocation($location.$$absUrl); // default
@@ -82,7 +83,7 @@ app.controller('dataCtrl', function($scope,$http,$location,$timeout,config,dataS
 
   config.setName(safename);   //default
 
-  $http.get("times/"+safename).success(function(_time_data) {
+  $http.get("/meme/"+config.name+"/times").success(function(_time_data) {
 
     $scope.memeName=safename;
 
@@ -172,8 +173,7 @@ app.controller('dataCtrl', function($scope,$http,$location,$timeout,config,dataS
     
     if($scope.start!=undefined && $scope.end!=undefined && ($scope.prevStart!=$scope.start || $scope.prevEnd!=$scope.end)) {
 
-      var url="datatime/"+safename+"/"+$scope.start+"/"+$scope.end
-      // console.log(url);
+      var url="/meme/"+safename+"/frames/"+$scope.start+"/"+$scope.end
 
       $http.get(url).success(function(_data) {
 
@@ -216,7 +216,7 @@ app.controller('geoCtrl', function($scope,$http,config,geoService,dataService){
     })
 
     // console.log($scope);
-    $http.get("/geoclusters/"+config.name).success(function(_geoclusters_data) {
+    $http.get("/meme/"+config.name+"/geoclusters").success(function(_geoclusters_data) {
       $scope.clusters=_geoclusters_data;
       // $scope.clusters=null;
       $scope.showClusters=true;
@@ -238,7 +238,7 @@ app.controller('geoCtrl', function($scope,$http,config,geoService,dataService){
       $(".geoPath path").toggle();
     }
 
-    $http.get("/provincesCount/"+config.name).success(function(_provincesCount_data) {
+    $http.get("/meme/"+config.name+"/provincesCount").success(function(_provincesCount_data) {
       $scope.provincesCount=_provincesCount_data;
     })
     

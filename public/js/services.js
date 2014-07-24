@@ -20,7 +20,7 @@ app.factory('dataService', function() {
 app.factory('memeService', function($resource) {
   return {
     "list":
-      $resource("/list",{ }, {
+      $resource("/memes",{ }, {
         getData: {method:'GET', isArray: false}
       })
     }
@@ -41,11 +41,11 @@ app.factory('geoService', function($resource) {
         getData: {method:'GET', isArray: false}
       }),
     "info":
-      $resource("info",{ }, {
+      $resource("geo/info",{ }, {
         getData: {method:'GET', isArray: false}
       }),
       "ratio":
-      $resource("ratio",{ }, {
+      $resource("geo/ratio",{ }, {
         getData: {method:'GET', isArray: false}
       })
 

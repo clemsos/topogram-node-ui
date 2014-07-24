@@ -1,29 +1,31 @@
-// TOPOGRAM UI
+/* 
+# TOPOGRAM UI
+Visualisation engine for Topogram
+*/
 
-/////////////////////////// MODULE DEPENDENCIES
-    
+
+// ## MODULE DEPENDENCIES
+// The server is based on express and mongoDB
+
     var express = require('express');
     var app = module.exports = express();
     var server = require('http').createServer(app);
 
+    var config = require("./config/config.json");
+
     var moment = require('moment');
     var d3 = require('d3');
-
-    var config = require("./config/config.json");
 
     var db = require('monk')('localhost/'+config.TOPOGRAM_MONGO_DB)
     , memes = db.get('memes')
 
-    // dbs
-    // var redis = require('redis');
-    // var mongoose = require("mongoose");
-
     // Hook Socket.io into Express
-    var io = require('socket.io').listen(server);
+    // var io = require('socket.io').listen(server);
 
-/////////////////////////// CONFIGURATION
+// ## CONFIGURATION
 
-    // TODO? https://github.com/visionmedia/express/wiki/Migrating-from-3.x-to-4.x
+    // TODO: Migrate to [Express 4.x](https://github.com/visionmedia/express/wiki/Migrating-from-3.x-to-4.x)
+
     app.use(function(err, req, res, next){
       console.error(err.stack);
       res.send(500, 'Something broke!');
@@ -53,13 +55,15 @@
     });
 
 
-/////////////////////////// ROUTES
-
-    // serve data 
-    app.get('/time', function(req, res){
+// ## ROUTES
+// API Documentation
+    
+    // partials
+    app.get('/partials/time', function(req, res){
         res.render('timeline', {layout: false});
     });
 
+    // Calculate weighted results for Weibo population
     var provinces_info=require("./data/nb_of_users_by_provinces")
     var provincesRatio={}
     var provincesInfo={};
@@ -69,21 +73,29 @@
         provincesRatio[p.name]=p.percent;
     }
 
-    app.get('/info', function(req, res){
+    //  ``/geo/info``
+
+    // list different information about provinces
+    app.get('/geo/info', function(req, res){
         res.send(provincesInfo);
     });
 
-    app.get('/ratio', function(req, res){
+    //  ``/geo/ratio``
+
+    // weight of provinces in total Weibo population (%)
+    app.get('/geo/ratio', function(req, res){
         res.send(provincesRatio);
     });
 
-    var memeList=require("./data/2012_sina-weibo-memes_list.json")
+    // ``/memes``
 
-    app.get('/list', function(req, res){
-        
+    // memes index
+    var memeList=require("./data/2012_sina-weibo-memes_list.json")
+    app.get('/memes', function(req, res){        
         res.send(memeList);
     });
 
+    // ``/meme/:meme/data/``
     app.get("/data/:meme",  function(req, res){
         
         console.log(req.params.meme)
@@ -99,12 +111,12 @@
         });
     });
 
-    app.get("/times/:meme", function(req, res){
+    // ``/meme/:meme/times``
+    app.get("/meme/:meme/times", function(req, res){
         
         memes.findOne({"name":req.params.meme}, 
                     {limit : 1, sort : { _id : -1 } }, 
                     function (err, doc) {
-                        // console.log(doc.data);
                         if(doc==null) res.send("meme doesn't exist")
                         else res.send(doc.data.map(function(d){
                             return {"count":d.count, "timestamp":d.time}
@@ -112,7 +124,8 @@
         });
     });
 
-    app.get("/geoclusters/:meme",  function(req, res){
+    // ``/meme/:meme/geoclusters``
+    app.get("/meme/:meme/geoclusters",  function(req, res){
         console.log(req.params.meme)
         memes.find({"name":req.params.meme}, 
                       { fields : {"geoclusters": 1 },limit : 1, sort : { _id : -1 } },     
@@ -124,7 +137,10 @@
 
     })
 
-    app.get("/provincesCount/:meme",  function(req, res){
+    /* ``/meme/:meme/provincescount/``
+
+     */
+    app.get("/meme/:meme/provincescount",  function(req, res){
         console.log(req.params.meme)
         memes.find({"name":req.params.meme}, 
                       { fields : {"provincesCount": 1 },limit : 1, sort : { _id : -1 } },     
@@ -136,9 +152,20 @@
 
     })
 
-    var color=d3.scale.category20()
+    /*
+     ``/datatime/:meme/:start/:end``  
 
-    app.get("/datatime/:meme/:start/:end", function(req, res){
+     specific timeframe for a single meme
+
+     ``:meme``  should be the original ID of the meme
+
+     ``:start``  should be a timestamp
+
+     ``:end``  should be a timestamp
+     */
+
+    var color=d3.scale.category20()
+    app.get("/meme/:meme/frames/:start/:end", function(req, res){
         
         var meme_name=req.params.meme,
             start=req.params.start,
@@ -176,9 +203,7 @@
                 data.forEach(function (d){
 
                     if(d==undefined) return; // remove empty timeframes
-                    // if(d!=undefined) console.log('times...');
                     
-                    // console.log(d);
                     // user nodes
                     d.user_nodes.forEach(function(v){  
                       if(dataService.users.index.indexOf(v.name) == -1 ) {
@@ -251,10 +276,8 @@
                             break;
                           } 
                         }
-                        // console.log(index);
                         if(index!=-1) dataService.geo[index].weight+=v.weight;
                         else dataService.geo.push(v);
-                          // dataService.geo.push(v);
                     });
 
                     // provinces_words
@@ -287,15 +310,18 @@
         )
     });
 
+    /* **This is a single Page APP**
+
+    Any routes will redirect to index by default */
     app.get('*', function(req, res){
-        // res.send("hello world !");
-        // res.render('index', {layout: false});
         res.sendfile(__dirname + '/public/index.html');
     });
 
-/////////////////////////// SOCKET IO
+// ## SOCKET IO
 
     /*
+    **DEPRECIATED**
+
     var clientSocket = io
         .sockets
         .on('connection', function (socket) {
@@ -312,9 +338,9 @@
             })
         });
     */
+
 function updateData (start,end){
     console.log("time changed");
-    // console.log(start,end);
 }
 
 

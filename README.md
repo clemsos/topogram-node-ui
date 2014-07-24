@@ -3,12 +3,12 @@
 ``Topogram UI`` is a visualisation engine based on node / angular / d3.js
 
 
-## Specs
+## Notes
 
-    * should list all existing 
-    * should show the figures
-    * should have users
+documentation http://nevir.github.io/groc/
 
-documentation
+## TODO
 
-http://nevir.github.io/groc/
+    * API documentation
+    * refactor d3.js pie directive
+    * implement users
