@@ -3,7 +3,6 @@
 Visualisation engine for Topogram
 */
 
-
 // ## MODULE DEPENDENCIES
     // The server is based on express and mongoDB
 
@@ -80,7 +79,6 @@ Visualisation engine for Topogram
 
     // redirect all others to the index (HTML5 history)
     app.get('*', routes.index);
-
 
 // Start server
 server.listen(config.TOPOGRAM_NODE_PORT, function() {
