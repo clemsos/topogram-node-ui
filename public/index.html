@@ -160,69 +160,12 @@
     </nav>
 
     <div id="viz" class="container-fluid" ng-controller="dataCtrl">
+        
+        <div ng-include="'/partials/timeline.html'"></div>  
+        <div ng-include="'/partials/map.html'"></div> 
+        <div ng-include="'/partials/words.html'"></div> 
+        <div ng-include="'/partials/users.html'"></div> 
 
-        <div class="row" ng-controller="wordCtrl">
-            <div class="col-xs-9 col-sm-9">
-                <div words start="start" end="end" class="words-container"></div>
-            </div>
-            <div class="col-xs-3 col-sm-3">
-                <a type="button" ng-click="saveWords(); $event.preventDefault()" class="btn-sm btn-default btn-save btn-save-png"><span class="glyphicon glyphicon-save" ></span> Save</a>
-                <p><small>Hit Shift+W to save</small></p>
-                <div class="wordpie-container"></div>
-
-            </div>
-        </div> 
-        <!-- 
-        -->
-        <!-- 
-        -->
-        <div class="row" ng-controller="userCtrl">
-            <div class="col-xs-9 col-sm-9">
-                <div users start="start" end="end" class="user-container"></div>
-            </div>
-            <div class="col-xs-3 col-sm-3">
-                <a type="button" ng-click="saveUsers(); $event.preventDefault()" class="btn-sm btn-default btn-save btn-save-png"><span class="glyphicon glyphicon-save" ></span> Save</a>
-                <p><small>Hit Shift+C to save</small></p>
-                <div class="pie-container"></div>
-            </div>
-        </div>  
-            
-          <div class="row" ng-controller="geoCtrl">
-              <div class="col-xs-9 col-sm-9">
-                  <div map start="start" end="end" geo-data="geoData" class="geo-container"></div>
-              </div>
-              <div class="col-xs-3 col-sm-3">
-                  <h5>User distribution by province</h5>
-                  <div class="geo-pie-container"></div>
-                  <p>
-                    <a class="btn-sm btn-default " href="#" ng-click="toggleInternals(); $event.preventDefault()"><span class="glyphicon glyphicon-play"></span>Show/Hide Geo Internal Edges</a>
-                  </p>
-                  <p>
-                    <a class="btn-sm btn-default " href="#" ng-click="toggleGeoEdges(); $event.preventDefault()"><span class="glyphicon glyphicon-play"></span>Show/Hide Geo Edges</a>
-                  </p>
-                  <div class="province-clusters-legend"></div>
-                  <h5>Province word</h5>
-                  <div class="province-words"></div>
-
-                  <a type="button" ng-click="saveGeo(); $event.preventDefault()" class="btn-sm btn-default btn-save btn-save-png"><span class="glyphicon glyphicon-save" ></span> Save Map</a>
-                  <p><small>Hit Shift+G to save</small></p>
-
-                  <a type="button" ng-click="savePie(); $event.preventDefault()" class="btn-sm btn-default btn-save btn-save-png"><span class="glyphicon glyphicon-save" ></span> Save Pie</a>
-
-              </div>
-          </div>    
-          
-          <div class="row well" id="timeline"u>
-              <timeslider id="time-slider" model="timeframe" type="text" data-slider-min="0"  data-slider-step="1" data-slider-orientation="horizontal" data-slider-selection="after" data-slider-tooltip="show"></timeslider>
-              <div timeserie class="time-container" time-data="timeSeriesData" start="start" end="end" meme-name="memeName">
-              </div>
-              <p>
-                  <a class="btn btn-default" href="#" ng-click="playAll(); $event.preventDefault()"><span class="glyphicon glyphicon-play"></span>Play</a>
-                  <a class="btn btn-default" href="#" ng-click="stop(); $event.preventDefault()"><span class="glyphicon glyphicon-stop"></span>Stop</a>
-                  <b>Start: {{start | date:'medium'}}</b>
-                  <b>End: {{end | date:'medium'}}</b>
-              </p>           
-          </div>
     </div>
 
 

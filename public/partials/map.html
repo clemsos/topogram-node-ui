@@ -1,0 +1,24 @@
+<div class="row" ng-controller="geoCtrl">
+    <div class="col-xs-9 col-sm-9">
+        <div map start="start" end="end" geo-data="geoData" class="geo-container"></div>
+    </div>
+    <div class="col-xs-3 col-sm-3">
+        <h5>User distribution by province</h5>
+        <div class="geo-pie-container"></div>
+        <p>
+          <a class="btn-sm btn-default " href="#" ng-click="toggleInternals(); $event.preventDefault()"><span class="glyphicon glyphicon-play"></span>Show/Hide Geo Internal Edges</a>
+      </p>
+      <p>
+          <a class="btn-sm btn-default " href="#" ng-click="toggleGeoEdges(); $event.preventDefault()"><span class="glyphicon glyphicon-play"></span>Show/Hide Geo Edges</a>
+      </p>
+      <div class="province-clusters-legend"></div>
+      <h5>Province word</h5>
+      <div class="province-words"></div>
+
+      <a type="button" ng-click="saveGeo(); $event.preventDefault()" class="btn-sm btn-default btn-save btn-save-png"><span class="glyphicon glyphicon-save" ></span> Save Map</a>
+      <p><small>Hit Shift+G to save</small></p>
+
+      <a type="button" ng-click="savePie(); $event.preventDefault()" class="btn-sm btn-default btn-save btn-save-png"><span class="glyphicon glyphicon-save" ></span> Save Pie</a>
+
+  </div>
+</div>    

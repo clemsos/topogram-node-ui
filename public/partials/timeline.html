@@ -1,0 +1,11 @@
+<div class="row well" id="timeline"u>
+    <timeslider id="time-slider" model="timeframe" type="text" data-slider-min="0"  data-slider-step="1" data-slider-orientation="horizontal" data-slider-selection="after" data-slider-tooltip="show"></timeslider>
+    <div timeserie class="time-container" time-data="timeSeriesData" start="start" end="end" meme-name="memeName">
+    </div>
+    <p>
+        <a class="btn btn-default" href="#" ng-click="playAll(); $event.preventDefault()"><span class="glyphicon glyphicon-play"></span>Play</a>
+        <a class="btn btn-default" href="#" ng-click="stop(); $event.preventDefault()"><span class="glyphicon glyphicon-stop"></span>Stop</a>
+        <b>Start: {{start | date:'medium'}}</b>
+        <b>End: {{end | date:'medium'}}</b>
+    </p>           
+</div>

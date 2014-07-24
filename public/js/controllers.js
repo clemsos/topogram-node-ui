@@ -60,28 +60,31 @@ app.controller('dataCtrl', function($scope,$http,$location,$timeout,config,dataS
   // TODO : fix dirty hack
   // get location and name
   // console.log($location.$$absUrl);
-  var url=getLocation($location.$$absUrl); // default
+  // var url=getLocation($location.$$absUrl); // default
   
-  var safename=url.pathname.slice(1,url.pathname.length);
-  console.log(safename);
-
-  if(safename == undefined) safename="biaoge"
+  // var safename=url.pathname.slice(1,url.pathname.length);
   // console.log(safename);
 
-  function getLocation(href) {
-    var match = href.match(/^(https?\:)\/\/(([^:\/?#]*)(?:\:([0-9]+))?)(\/[^?#]*)(\?[^#]*|)(#.*|)$/);
-    return match && {
-        protocol: match[1],
-        host: match[2],
-        hostname: match[3],
-        port: match[4],
-        pathname: match[5],
-        search: match[6],
-        hash: match[7]
-    }
-  }
+  // if(safename == undefined) safename="biaoge"
+  // // console.log(safename);
 
+  // function getLocation(href) {
+  //   var match = href.match(/^(https?\:)\/\/(([^:\/?#]*)(?:\:([0-9]+))?)(\/[^?#]*)(\?[^#]*|)(#.*|)$/);
+  //   return match && {
+  //       protocol: match[1],
+  //       host: match[2],
+  //       hostname: match[3],
+  //       port: match[4],
+  //       pathname: match[5],
+  //       search: match[6],
+  //       hash: match[7]
+  //   }
+  // }
+
+  var safename= "dufu";
   config.setName(safename);   //default
+  console.log(safename);
+
 
   $http.get("/meme/"+config.name+"/times").success(function(_time_data) {
 

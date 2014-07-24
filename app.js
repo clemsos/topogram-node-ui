@@ -5,7 +5,7 @@ Visualisation engine for Topogram
 
 
 // ## MODULE DEPENDENCIES
-// The server is based on express and mongoDB
+    // The server is based on express and mongoDB
 
     var express = require('express');
     var app = module.exports = express();
@@ -54,14 +54,7 @@ Visualisation engine for Topogram
         app.use(express.errorHandler());
     });
 
-
 // ## ROUTES
-// API Documentation
-    
-    // partials
-    app.get('/partials/time', function(req, res){
-        res.render('timeline', {layout: false});
-    });
 
     // Calculate weighted results for Weibo population
     var provinces_info=require("./data/nb_of_users_by_provinces")
@@ -134,12 +127,9 @@ Visualisation engine for Topogram
                         if(doc==null) res.send("meme doesn't exist")
                         else res.send(doc[0].geoclusters)
         });
-
     })
 
-    /* ``/meme/:meme/provincescount/``
-
-     */
+    /* ``/meme/:meme/provincescount/`` */
     app.get("/meme/:meme/provincescount",  function(req, res){
         console.log(req.params.meme)
         memes.find({"name":req.params.meme}, 
@@ -153,15 +143,15 @@ Visualisation engine for Topogram
     })
 
     /*
-     ``/datatime/:meme/:start/:end``  
+     ``/meme/:meme/frames/:start/:end``  
 
      specific timeframe for a single meme
 
-     ``:meme``  should be the original ID of the meme
+     ``meme``  original ID of the meme
 
-     ``:start``  should be a timestamp
+     ``start`` should be a timestamp
 
-     ``:end``  should be a timestamp
+     ``end``  should be a timestamp
      */
 
     var color=d3.scale.category20()

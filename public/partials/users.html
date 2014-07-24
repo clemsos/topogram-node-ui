@@ -1,0 +1,10 @@
+<div class="row" ng-controller="userCtrl">
+    <div class="col-xs-9 col-sm-9">
+        <div users start="start" end="end" class="user-container"></div>
+    </div>
+    <div class="col-xs-3 col-sm-3">
+        <a type="button" ng-click="saveUsers(); $event.preventDefault()" class="btn-sm btn-default btn-save btn-save-png"><span class="glyphicon glyphicon-save" ></span> Save</a>
+        <p><small>Hit Shift+C to save</small></p>
+        <div class="pie-container"></div>
+    </div>
+</div>
