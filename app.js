@@ -1,4 +1,4 @@
-// MITRAS UI
+// TOPOGRAM UI
 
 /////////////////////////// MODULE DEPENDENCIES
     
@@ -11,7 +11,7 @@
 
     var config = require("./config/config.json");
 
-    var db = require('monk')('localhost/'+config.MITRAS_MONGO_DB)
+    var db = require('monk')('localhost/'+config.TOPOGRAM_MONGO_DB)
     , memes = db.get('memes')
 
     // dbs
@@ -319,6 +319,6 @@ function updateData (start,end){
 
 
 // Start server
-server.listen(config.MITRAS_NODE_PORT, function() {
+server.listen(config.TOPOGRAM_NODE_PORT, function() {
     console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
 });

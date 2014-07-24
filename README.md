@@ -1,7 +1,9 @@
 # Topogram UI
 
+``Topogram UI`` is a visualisation engine based on node / angular / d3.js
+
+
 ## Specs
-node / angular / d3.js
 
     * should list all existing 
     * should show the figures

@@ -1,12 +1,5 @@
 {
-    "ETHER_NODE_PORT": ,
-    "ETHER_REDIS_Q" : "ethermashup",
-    "ETHER_REDIS_RAW" : "ethermashup:raw",
-    "ETHER_REDIS_HOST" : "localhost",
-    "ETHER_REDIS_PORT" : "6379",
-    "ETHER_MONGO_DB" : "ethermashup",
-    "ETHER_TMP_DIR" : "",
-    "ETHER_DEVICE_LIST": [
-        ""
-    ]
+    "TOPOGRAM_NODE_PORT": 3000,
+    "TOPOGRAM_MONGO_DB" : "weibodata",
+    "TOPOGRAM_TMP_DIR" : "/tmp/"
 }
