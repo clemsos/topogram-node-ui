@@ -1,0 +1,80 @@
+<!doctype html>
+<html ng-app="mitras">
+  <head>
+    <title>Timeline</title>
+
+    <style>
+        body {
+            padding:0;
+        }
+        
+        #timeline .slider {
+            width: 960px;
+        }
+
+        .axis path,
+        .axis line {
+          fill: none;
+          stroke: #000;
+          shape-rendering: crispEdges;
+        }
+
+    </style>
+    <link href="../public/css/slider.css" rel="stylesheet">
+    <link href="../public/css/bootstrap.min.css" rel="stylesheet">
+
+<div class="container-fluid">
+    <div class="row well">
+        <div id="timeline" ng-controller="timeCtrl">
+            <!-- here goes the timeline -->
+            <div timeserie time-data="timeSeriesData" start="start" end="end" ></div>
+            <br/>
+            <b>Start: {{start | date:'medium'}}</b>
+            <br/>
+            <b>End: {{end | date:'medium'}}</b>
+            <br/>
+            <slider id="time-slider" model="timeframe" type="text" data-slider-min="0"  data-slider-step="1" data-slider-orientation="horizontal" data-slider-selection="after" data-slider-tooltip="show"></slider>
+        </div>
+    </div>
+    
+    <!-- 
+    <div class="row" ng-controller="wordCtrl">
+        <div words start="start" end="end"></div>
+    </div> 
+    -->
+
+    <!-- 
+    <div class="row" ng-controller="geoCtrl">
+        <div map start="start" end="end" geo-data="geoData"></div>
+    </div> 
+    -->
+    
+   <!--  <div class="row" ng-controller="userCtrl">
+        <div users start="start" end="end"></div>
+    </div>  -->
+   
+
+</div>
+
+<script type="text/javascript" src="../public/libs/jquery.min.js"></script>
+<script type="text/javascript" src="../public/libs/bootstrap.min.js"></script>
+<script type="text/javascript" src="../public/libs/bootstrap-slider.js"></script>
+<script type="text/javascript" src="../public/libs/d3.v3.min.js"></script>
+<script type="text/javascript" src="../public/libs/queue.v1.min.js"></script>
+<script type="text/javascript" src="../public/libs/colorbrewer.v1.min.js"></script>
+<script type="text/javascript" src="../public/libs/topojson.v1.min.js"></script>   
+
+<script src="/socket.io/socket.io.js"></script>
+
+<script src="../public/libs/angular/angular.js"></script>
+<script src="../public/libs/angular/angular-resource.js"></script>
+
+<script src="../public/js/Config.js"></script>
+<script src="../public/js/app.js"></script>
+<script src="../public/js/services.js"></script>
+<script src="../public/js/controllers.js"></script>
+<script src="../public/js/directives.js"></script>
+
+
+
+

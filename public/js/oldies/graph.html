@@ -1,0 +1,48 @@
+<style>
+    /*grao*ph*/
+              .node {
+                cursor: pointer;
+                stroke: #3182bd;
+                stroke-width: 1.5px;
+              }
+
+              path.link {
+                fill: none;
+                stroke: #9ecae1;
+                stroke-width: 1.5px;
+              }
+
+              circle {
+                fill: #ccc;
+                stroke: none;
+                stroke-width: 1.5px;
+              }
+
+              text {
+                fill: #000;
+                stroke:none;
+                font: 10px sans-serif;
+                pointer-events: none;
+              }
+</style>
+<h2 class="sub-header">Conversation <small>Conversational graph</small></h4>
+<div class="row">
+  <div class="col-xs-12 col-sm-6 placeholder">
+    <div id="graph"></div>
+  </div>
+    <div><ul  class="nodeinfo"></ul></div>
+</div>
+
+<script type="text/javascript" src="libs/jquery.min.js"></script>
+<script type="text/javascript" src="libs/d3.v3.min.js"></script>
+<!-- <script type="text/javascript" src="js/d3graph_click.js"></script> -->
+<script type="text/javascript" src="js/d3multilayer.js"></script>
+
+<script>
+    var safename="biaoge";
+    $(document).ready(function() {
+        var graphFile="data/"+safename+"/"+safename+"_words.json";
+        console.log(graphFile);
+        drawD3Graph(graphFile);
+    });
+</script>

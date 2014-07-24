@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- <link rel="shortcut icon" href="ico/favicon.ico"> -->
+
+    <title>Meme Name</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/dashboard.css" rel="stylesheet">
+    
+      <style>
+          /*grao*ph*/
+              .node {
+                cursor: pointer;
+                stroke: #3182bd;
+                stroke-width: 1.5px;
+              }
+
+              path.link {
+                fill: none;
+                stroke: #9ecae1;
+                stroke-width: 1.5px;
+              }
+
+              /*circle {
+                fill: #ccc;
+                stroke: #fff;
+                stroke-width: 1.5px;
+              }*/
+
+              text {
+                fill: #000;
+                stroke:none;
+                font: 10px sans-serif;
+                pointer-events: none;
+              }
+
+          /*time*/
+          .axis path,
+          .axis line {
+            fill: none;
+            stroke: #000;
+            shape-rendering: crispEdges;
+          }
+          .count {
+            fill: steelblue;
+          }
+          .x.axis path {
+            display: none;
+          }
+
+          /*map*/
+          .provinces {
+            background-color: #fff;
+            border: 1px solid #ccc;
+          }
+          .hk {
+              position:relative;
+              left:-750px;
+              top:0px;
+          }
+      </style>
+  </head>
+
+  <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">Sina Weibo Memes</a>
+      </div>
+      <div class="navbar-collapse collapse">
+        <ul class="nav navbar-nav navbar-right">
+          <!-- <li><a href="#">Dashboard</a></li>
+          <li><a href="#">Settings</a></li> -->
+          <li><a href="#">About</a></li>
+          <li><a href="#">Help</a></li>
+        </ul>
+        <form class="navbar-form navbar-right">
+          <input type="text" class="form-control" placeholder="Search...">
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-2 col-md-1 sidebar">
+        <ul class="nav nav-sidebar">
+          <li><a href="#">Home</a></li>
+          <!-- 
+          <li class="active"><a href="#">Overview</a></li>
+          <li><a href="#">Analytics</a></li>
+          <li><a href="#">Export</a></li> -->
+        </ul>
+        <ul class="memelist nav nav-sidebar">
+          <!-- <li><a href="">Meme</a></li> -->
+        </ul>
+      </div>
+      <div class="col-sm-10 col-sm-offset-2 col-md-11 col-md-offset-1 main">
+        <h1 class="page-header">Meme Name</h1>
+        <div class="row">
+          <div class="col-xs-6 col-sm-3">
+            <h4>Infos <small class="text-muted">About this meme</small></h4>
+            <div id="info"></div>
+            <h4>Hashtags <small class="text-muted">Most frequent</small></h4>
+            <div id="hashtags"></div>
+          </div>
+          <div class="col-xs-6 col-sm-3">
+            <h4>Words <small class="text-muted">Most used words</small></h4>
+            <div id="words"></div>
+            <!-- <h4>Urls <small class="text-muted">Something else</small></h4>
+            <div id="urls"></div> -->
+          </div>
+          <div class="col-xs-6 col-sm-6">
+            <h4>Volume of tweets <small class="text-muted">Time series</small></h4>
+            <div id="timeserie"></div>
+          </div>
+        </div>
+
+        
+        <h2 class="sub-header">Conversation <small>Conversational graph</small></h4>
+        <div class="row">
+          <div class="col-xs-12 col-sm-6 placeholder">
+            <div id="graph"></div>
+          </div>
+        </div>
+
+        <h2 class="sub-header">User map <small>User distribution</small></h4>
+        <div class="row">
+          <div class="col-xs-12 col-sm-7 placeholder">
+            <div id="map"></div>
+          </div>
+        </div>
+
+
+        <h2 class="sub-header">Top tweets</h2>
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Header</th>
+                <th>Header</th>
+                <th>Header</th>
+                <th>Header</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1,001</td>
+                <td>Lorem</td>
+                <td>ipsum</td>
+                <td>dolor</td>
+                <td>sit</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>  
+  <!-- Bootstrap core JavaScript
+  ================================================== -->
+  <!-- Placed at the end of the document so the pages load faster -->
+  <script type="text/javascript" src="libs/jquery.min.js"></script>
+  <script type="text/javascript" src="libs/jquery.csv.min.js"></script>
+  <script type="text/javascript" src="libs/bootstrap.min.js"></script>
+  <script type="text/javascript" src="libs/d3.v3.min.js"></script>
+  <script type="text/javascript" src="libs/queue.v1.min.js"></script>
+  <script type="text/javascript" src="libs/topojson.v1.min.js"></script>    
+  <script type="text/javascript" src="libs/d3.layout.cloud.js"></script>
+  <script type="text/javascript" src="js/d3words.js"></script>
+  <script type="text/javascript" src="js/d3map.js"></script>
+  <script type="text/javascript" src="js/d3time.js"></script>
+  <script type="text/javascript" src="js/d3graph.js"></script>
+  
+  <script>
+      // load list of memes
+      var memes_list="memes.json";
+      var memes_list="data/2012_sina-weibo-memes_list.csv";
+
+      var graphFile,mapFile,timeFile,wordsFile;
+      var memes,load_meme;
+
+      // parse URL
+      var url=getLocation(document.URL)
+      var current_meme=url.pathname.split('/')[url.pathname.split('/').length-1]
+
+
+      $(document).ready(function() {
+          
+          // load the lis of memes from csv
+          $.get(memes_list, function(memes_list_data) {
+                  
+                  // console.log(memes_list_data);
+                  memes=$.csv.toObjects(memes_list_data);
+                  console.log(memes)
+                  
+                  // memes=memes_list_data.data;
+                  memes.forEach(function(meme) {
+                    add_meme(meme);
+                  })
+
+                  // });
+                 
+                  console.log(current_meme)
+                  // load_meme(current_meme)
+          });
+
+
+          // parse data and add menu item
+          function add_meme(meme) {
+            // console.log(meme);
+            // console.log(meme.safename,meme.keywords,meme.name);
+            var li='<li><a class="meme" onClick=load_meme("'+meme.safename+'") href="/'+meme.safename+'">'+meme.safename+'</a></li>';
+            
+            $(".memelist").append(li)
+
+            meme.graphFile="data/"+meme.safename+"/"+meme.safename+"_d3graph.csv";
+            meme.mapFile="data/"+meme.safename+"/"+meme.safename+"_usermap.json";
+            meme.timeFile="data/"+meme.safename+"/"+meme.safename+"_time_series.json";
+            meme.wordsFile="data/"+meme.safename+"/"+meme.safename+"_words.json";  
+          }
+
+          // load data on click
+          load_meme= function load_meme(_meme) {
+            reset_display();
+            var meme; 
+            for (var i = 0; i < memes.length; i++) {
+              if( memes[i]["safename"] === _meme ) meme = memes[i] 
+            };
+            console.log(meme);
+            
+            // console.log(meme);
+            var title= meme.safename+' <small>'+meme.name+'<small>'
+            $("h1.page-header").html(title);
+
+            // var baidu
+            var text={};
+            // text.name="<p>Name : "+meme.name+"</p>";
+            // text.safename="<p>"++"</p>"
+            text.keywords="<p>Keywords : "+meme.keywords+"</p>";
+            text.start="<p> Date start :"+meme.start+"</p>";
+            // text.type="<p>Type :"+meme.type+"</p>";
+            // text.link2="<p><a href='"+meme.link2+" '>Read More</a></p>";
+            text.links="<p>Links : <a href='"+meme.wikipedia+" '>Wikipedia</a>, <a href='"+meme.baidu+" '>Baidu</a>, <a href='"+meme.link1+" '>Read More</a></p>";
+            text.dataset="<p>Dataset : xxx tweets"
+
+            for (var i = 0; i < Object.keys(text).length; i++) {
+              $("#info").append(text[Object.keys(text)[i]]);
+              console.log();
+            };
+
+            drawD3Words(meme.wordsFile);
+            drawD3Graph(meme.graphFile);
+            drawD3Map(meme.mapFile)
+            drawD3Time(meme.timeFile);
+            
+            
+
+          }
+
+          function reset_display() {
+            $("#info").html("");
+            $("#words").html("");
+            $("#urls").html("");
+            $("#hashtags").html("");
+            $("#timeserie").html("");
+            $("#map").html("");
+            $("#graph").html("");
+
+          }
+
+      });
+
+      function getLocation(href) {
+          var match = href.match(/^(https?\:)\/\/(([^:\/?#]*)(?:\:([0-9]+))?)(\/[^?#]*)(\?[^#]*|)(#.*|)$/);
+          return match && {
+              protocol: match[1],
+              host: match[2],
+              hostname: match[3],
+              port: match[4],
+              pathname: match[5],
+              search: match[6],
+              hash: match[7]
+          }
+      }
+    </script>
+</html>

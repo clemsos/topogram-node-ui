@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- <link rel="shortcut icon" href="ico/favicon.ico"> -->
+
+    <title>Sina Weibo 2012 Memes</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <!-- <link href="css/dashboard.css" rel="stylesheet"> -->
+    
+      <style>
+      </style>
+  </head>
+
+  <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">Sina Weibo Memes</a>
+      </div>
+      <div class="navbar-collapse collapse">
+        <ul class="nav navbar-nav navbar-right">
+          <!-- <li><a href="#">Dashboard</a></li>
+          <li><a href="#">Settings</a></li> -->
+          <li><a href="#">About</a></li>
+          <li><a href="#">Help</a></li>
+        </ul>
+        <form class="navbar-form navbar-right">
+          <input type="text" class="form-control" placeholder="Search...">
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <div class="container-fluid">
+    <!-- Jumbotron -->
+    <div class="jumbotron">
+      <h1>Sina Weibo 2012 Memes</h1>
+      <p class="lead">Some investigation.</p>
+      <p><a class="btn btn-lg btn-success" href="#" role="button">Get started today</a></p>
+    </div>
+    <div class="memelist"></div>
+
+      
+  </div>  
+  <!-- Bootstrap core JavaScript
+  ================================================== -->
+  <!-- Placed at the end of the document so the pages load faster -->
+  <script type="text/javascript" src="libs/jquery.min.js"></script>
+  <script type="text/javascript" src="libs/bootstrap.min.js"></script>
+  <script type="text/javascript" src="libs/d3.v3.min.js"></script>
+  
+  <script>
+      // load list of memes
+      var memes_list="memes.json";
+      // var memes_list="data/2012_sina-weibo-memes_list.csv";
+
+      var graphFile,mapFile,timeFile,wordsFile;
+      var memes,load_meme;
+
+      $(document).ready(function() {
+          
+          // load the lis of memes from csv
+          $.get(memes_list, function(memes_list_data) {
+                  // memes=$.csv.toObjects(memes_list_data);
+                  // console.log(memes);
+                  // memes_list_data.data.forEach(function(meme) {
+                  //   add_meme(meme);
+                  // })
+                  load_memes(memes_list_data.data)
+          });
+
+          // // parse data and add menu item
+          function load_memes(_memes) {
+            // console.log(meme);
+            // console.log(meme.safename,meme.keywords,meme.name);
+            // 
+            // $(".memelist").append(li)
+            // console.log(_memes);
+            var memes=[]
+            for (var i = 0; i < _memes.length; i++) {
+              
+              // console.log(_memes[i]);
+
+              var link='<a class="meme" href="/'+_memes[i].safename+'">'+_memes[i].name+'</a>';
+
+              var meme={};
+              // meme["link"]=link;
+              // meme["name"]=_memes[i].name;
+              meme["name"]=link;
+              meme["keywords"]=_memes[i].keywords;
+              meme["type"]=_memes[i].type;
+              // meme["start"]=_memes[i].start;
+
+            //   var meme=[];
+            //   meme.push(link);
+            //   // meme.push(_memes[i].name);
+            //   meme.push(_memes[i].keywords);
+            //   meme.push(_memes[i].type);
+            //   meme.push(_memes[i].start);
+              memes.push(meme)
+            };
+
+            console.log(memes);
+            // console.log();
+            tabulate(".memelist",memes,["name","keywords","type"])
+
+          }
+          
+
+          // // load data on click
+          // load_meme= function load_meme(_meme) {
+          //   reset_display();
+          //   var meme; 
+          //   for (var i = 0; i < memes.length; i++) {
+          //     if( memes[i]["safename"] === _meme ) meme = memes[i] 
+          //   };
+          //   console.log(meme);
+            
+          //   // console.log(meme);
+          //   var title= meme.safename+' <small>'+meme.name+'<small>'
+          //   $("h1.page-header").html(title);
+
+          //   // var baidu
+          //   var text={};
+          //   // text.name="<p>Name : "+meme.name+"</p>";
+          //   // text.safename="<p>"++"</p>"
+          //   text.keywords="<p>Keywords : "+meme.keywords+"</p>";
+          //   text.start="<p> Date start :"+meme.start+"</p>";
+          //   // text.type="<p>Type :"+meme.type+"</p>";
+          //   // text.link2="<p><a href='"+meme.link2+" '>Read More</a></p>";
+          //   text.links="<p>Links : <a href='"+meme.wikipedia+" '>Wikipedia</a>, <a href='"+meme.baidu+" '>Baidu</a>, <a href='"+meme.link1+" '>Read More</a></p>";
+          //   text.dataset="<p>Dataset : xxx tweets"
+
+          //   for (var i = 0; i < Object.keys(text).length; i++) {
+          //     $("#info").append(text[Object.keys(text)[i]]);
+          //     console.log();
+          //   };
+
+
+
+          // }          
+
+    function tabulate(div, data, columns) {
+      var table = d3.select(div).append("table")
+              .attr("class","table table-striped")
+              // .attr("style", "margin-left: 250px"),
+          thead = table.append("thead"),
+          tbody = table.append("tbody");
+
+      // append the header row
+      thead.append("tr")
+          .selectAll("th")
+          .data(columns)
+          .enter()
+          .append("th")
+              .text(function(column) { return column; });
+
+      // create a row for each object in the data
+      var rows = tbody.selectAll("tr")
+          .data(data)
+          .enter()
+          .append("tr");
+
+      // create a cell in each row for each column
+      var cells = rows.selectAll("td")
+          .data(function(row) {
+              return columns.map(function(column) {
+                  return {column: column, value: row[column]};
+              });
+          })
+          .enter()
+          .append("td")
+          .attr("style", "font-family: Courier")
+              .html(function(d) { return d.value; });
+      
+      return table;
+    }
+      });
+    </script>
+</html>
