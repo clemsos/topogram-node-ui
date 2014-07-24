@@ -11,7 +11,7 @@ pids
 logs
 results
 public/data
-data
+_data
 
 node_modules
 
