@@ -1,7 +1,17 @@
-h2 Write a new post
-label(for='title') Title: 
-input(ng-model='form.title', name='title')
-p Body:
-textarea(ng-model='form.text', cols='50', rows='15')
-p
-  button(ng-click='submitPost()') Submit Post
+h2 Search sth
+//- label(for='title') Keywords: 
+
+section(class='searchField')
+    form(ng-submit='search()')
+        input(ng-model='searchTerm', type="search",name='title',class="form-control")
+        button(class="btn btn-default", type="submit" ) Get results
+
+
+section.results
+  .no-recipes(ng-hide='tweets.length') No results
+  article.recipe(ng-cloak, ng-repeat='tweet in tweets')
+    p
+      | {{tweet}}
+
+.load-more(ng-cloak='', ng-hide='allResults')
+    a(ng-click='loadMore()') More...

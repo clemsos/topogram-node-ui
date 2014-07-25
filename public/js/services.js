@@ -4,7 +4,6 @@ app.factory('config', function($window) {
     return new Config();
 });
 
-
 app.factory('dataService', function() {
     return {
 
@@ -51,6 +50,57 @@ app.factory('geoService', function($resource) {
 
   }
 });
+
+
+/**
+ * Create a service to power calls to Elasticsearch. We only need to
+ * use the search endpoint.
+ */
+app.factory('searchService',
+    ['$q', 'esFactory', '$location', function($q, elasticsearch, $location){
+        var client = elasticsearch({
+            host: $location.host() + ":9200"
+        });
+
+        /**
+         * Given a term and an offset, load another round of 10 recipes.
+         *
+         * Returns a promise.
+         */
+        var search = function(term, offset){
+            console.log(term, offset);
+            var deferred = $q.defer();
+            var query = {
+                "match": {
+                    "_all": term
+                }
+            };
+
+            client.search({
+                "index": 'weiboscope_39_40',
+                "type": 'tweet',
+                "body": {
+                    "size": 10,
+                    "from": (offset || 0) * 10,
+                    "query": query
+                }
+            }).then(function(result) {
+                var ii = 0, hits_in, hits_out = [];
+                hits_in = (result.hits || {}).hits || [];
+                for(;ii < hits_in.length; ii++){
+                    hits_out.push(hits_in[ii]._source);
+                }
+                deferred.resolve(hits_out);
+            }, deferred.reject);
+            return deferred.promise;
+        };
+
+        return {
+            "search": search
+        };
+    }]
+);
+
 
 /*
 app.factory('socket', function ($rootScope) {

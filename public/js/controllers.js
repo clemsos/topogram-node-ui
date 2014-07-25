@@ -8,16 +8,6 @@ function IndexCtrl($scope, $http) {
     });
 }
 
-function AddPostCtrl($scope, $http, $location) {
-  $scope.form = {};
-  $scope.submitPost = function () {
-    $http.post('/api/meme', $scope.form).
-      success(function(data) {
-        $location.path('/');
-      });
-  };
-}
-
 function EditPostCtrl($scope, $http, $location, $routeParams) {
   $scope.form = {};
   $http.get('/api/meme/' + $routeParams.id).
@@ -50,6 +40,84 @@ function DeletePostCtrl($scope, $http, $location, $routeParams) {
     $location.url('/');
   };
 }
+
+function AddPostCtrl($scope, $http, $location) {
+  $scope.form = {};
+  /*
+  $scope.submitPost = function () {
+    $http.post('/api/meme', $scope.form).
+      success(function(data) {
+        $location.path('/');
+      });
+  };
+  */
+}
+
+
+/**
+ * Search interact with the UI.
+ */
+
+
+app.controller('searchCtrl',
+    ['searchService', '$scope', '$location', function(tweets, $scope, $location){
+        
+        // Provide some nice initial choices
+        var initChoices = [
+            "rendang",
+            "nasi goreng",
+            "pad thai",
+            "pizza",
+            "lasagne",
+            "ice cream",
+            "schnitzel",
+            "hummous"
+        ];
+        var idx = Math.floor(Math.random() * initChoices.length);
+
+        // Initialize the scope defaults.
+        $scope.tweets = [];        // An array of recipe results to display
+        $scope.page = 0;            // A counter to keep track of our current page
+        $scope.allResults = false;  // Whether or not all results have been found.
+
+        // And, a random search term to start if none was present on page load.
+        $scope.searchTerm = $location.search().q || initChoices[idx];
+
+        /**
+         * A fresh search. Reset the scope variables to their defaults, set
+         * the q query parameter, and load more results.
+         */
+        $scope.search = function(){
+            $scope.page = 0;
+            $scope.tweets = [];
+            $scope.allResults = false;
+            $location.search({'q': $scope.searchTerm});
+            $scope.loadMore();
+        };
+
+        /**
+         * Load the next page of results, incrementing the page counter.
+         * When query is finished, push results onto $scope.recipes and decide
+         * whether all results have been returned (i.e. were 10 results returned?)
+         */
+        $scope.loadMore = function(){
+            tweets.search($scope.searchTerm, $scope.page++).then(function(results){
+                if(results.length !== 10){
+                    $scope.allResults = true;
+                }
+
+                var ii = 0;
+                for(;ii < results.length; ii++){
+                    $scope.tweets.push(results[ii]);
+                }
+            });
+        };
+
+        // Load results on first run
+        $scope.loadMore();
+    }]
+);
+
 
 // Menu
 app.controller('navCtrl', function($scope,config,memeService){

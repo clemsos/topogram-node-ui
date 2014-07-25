@@ -2,8 +2,11 @@
 
 // Declare app level module which depends on filters, and services
 var app = angular.module('topogram', 
-    ['ngResource', "ngRoute"]);
-
+    [
+    'ngResource', 
+    'ngRoute',
+    'elasticsearch'
+    ]);
 
 app.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
         $routeProvider.
@@ -13,7 +16,7 @@ app.config(['$routeProvider', '$locationProvider', function($routeProvider, $loc
       }).
       when('/addPost', {
         templateUrl: 'partials/addPost',
-        controller: AddPostCtrl
+        controller: "searchCtrl"
       }).
       when('/readPost/:id', {
         templateUrl: 'partials/readPost',
