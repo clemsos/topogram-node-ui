@@ -35,8 +35,6 @@ app.directive('timeslider', function ($parse) {
 
 app.directive('timeserie', function () {
     // var chart = d3.custom.timeSerie(),
-    
-
     return {
         replace: false,
         scope: { 
@@ -44,11 +42,8 @@ app.directive('timeserie', function () {
             start: '=start',
             end: '=end',
             memeName: "=memeName"
-
          },
         link: function ($scope, element, attrs) {
-            
-            // console.log("timeline binded");
 
             var margin = {top: 20, right: 20, bottom: 80, left: 40},
                         width = 900,
@@ -73,7 +68,6 @@ app.directive('timeserie', function () {
 
             $scope.$watch('timeData', function(updatedTimeData, oldVal) {
 
-                // console.log($scope.start)
                 if(updatedTimeData != undefined && $scope.start!= undefined && $scope.end!= undefined) {
 
                     // console.log('draw timeline');
@@ -84,6 +78,7 @@ app.directive('timeserie', function () {
                     var x = d3.time.scale().range([time_width/_data.length/2, time_width-time_width/_data.length/2]);
                     // var x = d3.scale.ordinal().rangeRoundBands([0, time_width], .05);
                     var y = d3.scale.linear().range([time_height, 0]);
+
 
                     // X-axis.
                     var xAxis = d3.svg.axis()
@@ -98,7 +93,7 @@ app.directive('timeserie', function () {
                         .ticks(10);
 
                     // Set scale domains. 
-                    x.domain(d3.extent(_data, function(d) { return d.date; }));
+                    x.domain(d3.extent(_data, function(d) { return d.time; }));
                     y.domain([0, d3.max(_data, function(d) { return d.count; })]);
                     
                     svg.transition().duration(duration).attr({width: width, height: height})
@@ -110,15 +105,13 @@ app.directive('timeserie', function () {
                         .ease(ease)
                         .call(xAxis);
 
-                   
                     
                     // Draw bars. 
                     bars = svg.append("g")
                         .attr("class","timebar")
                         .selectAll(".timebar")
-                        .data( _data, function(d) { return d.date; });
+                        .data( _data, function(d) { return d.time; });
 
-                    console.log($scope);
                     d3.select(".timebar")
                         .append("g")
                         .attr("transform","translate(50,10)")
@@ -130,7 +123,7 @@ app.directive('timeserie', function () {
                     bars.transition()
                         .duration(duration)
                         .ease(ease)
-                        .attr("x", function(d) { return x(d.date) - time_width/_data.length/2; })
+                        .attr("x", function(d) { return x(d.time) - time_width/_data.length/2; })
                         .attr("width", time_width / _data.length)
                         .attr("y", function(d) { return y(d.count); })
                         .attr("height", function(d) { return time_height - y(d.count);});
@@ -138,7 +131,7 @@ app.directive('timeserie', function () {
                     bars.enter().append("rect")
                         .attr("class", "count")
                         .attr("width", time_width / _data.length)
-                        .attr("x", function(d) { return x(d.date) - (time_width/_data.length)/2; })
+                        .attr("x", function(d) { return x(d.time) - (time_width/_data.length)/2; })
                         .attr("y", time_height)
                         .attr("height", 0)
                         .style("fill", function(d){ return (d.selected)?"steelblue":"#CCC"})

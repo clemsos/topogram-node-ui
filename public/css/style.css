@@ -51,3 +51,7 @@ body {
   top: 100%;
   left: 0;
 }
+
+.ng-table-pager {
+    display: none;
+}

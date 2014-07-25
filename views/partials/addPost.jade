@@ -1,30 +1,36 @@
-h2 Search sth
-//- label(for='title') Keywords: 
+.container
+    h2 Search for messages
+    //- label(for='title') Keywords: 
 
-section(class='searchField')
-    form(ng-submit='search()')
-        input(ng-model='searchTerm', type="search",name='title',class="form-control")
-        button(class="btn btn-default", type="submit" ) Get results
+    section(class='searchField')
+
+        form.form-inline(ng-submit='search()', role="form")
+            span.help-block Use operators AND, OR and quotes for more precise queries
+            input(ng-model='searchTerm', type="search",name='title',class="form-control")
+            select.form-control(ng-model="index",ng-options="index for index in indices")
+
+            button(class="btn btn-default", type="submit" ) Get results
 
 
-section.results
-    .no-recipes(ng-hide='tweets.length') No results
-    article.recipe(ng-cloak)
-        h3 Total : {{ totalResults }} results.
-        table.table.table-striped.table-condensed(ng-table='')
-            tbody
-            tr(ng-repeat='tweet in tweets')
-                td(data-title="'mid'") {{tweet.mid}}
-                td(data-title="'text'") {{tweet.text}}
-                td(data-title="'created_at'") {{tweet.created_at | date:'medium'}}
-                td(data-title="'uid'") {{tweet.uid}}
-                td(data-title="'source'") {{tweet.source}}
-                td(data-title="'image'") {{tweet.image}}
-                td(data-title="'geo'") {{tweet.geo}}
-                //- td(data-title="'retweeted_uid'") {{tweet.retweeted_uid}}
-                //- td(data-title="'retweeted_status_mid'") {{tweet.retweeted_status_mid}}
-                td(data-title="'deleted_last_seen'") {{tweet.deleted_last_seen}}
-                td(data-title="'permission_denied'") {{tweet.permission_denied}}
-
-.load-more(ng-cloak='', ng-hide='allResults')
-    a(ng-click='loadMore()') More...
+    section.results
+        h3.no-recipes(ng-hide='tweets.length') No results
+        article.recipe(ng-hide='!tweets.length')
+            h3 Total : {{ totalResults }} results
+                small  in {{ index }}
+            timeserie(timeserie="" time-data="timeData" start="start" end="end" meme-name="searchTerm")
+            .load-more(ng-cloak='', ng-hide='allResults')
+                a.btn.btn-default(ng-click='loadMore()') View more results...
+            table.table.table-striped.table-condensed(ng-table='')
+                tbody
+                tr(ng-repeat='tweet in tweets')
+                    td(data-title="'mid'", sortable="'mid'") {{tweet.mid}}
+                    td(data-title="'text'") {{tweet.text}}
+                    td(data-title="'created_at'",sortable="'created_at'") {{tweet.created_at | date:'medium'}}
+                    td(data-title="'uid'") {{tweet.uid}}
+                    td(data-title="'source'") {{tweet.source}}
+                    td(data-title="'image'") {{tweet.image}}
+                    td(data-title="'geo'") {{tweet.geo}}
+                    //- td(data-title="'retweeted_uid'") {{tweet.retweeted_uid}}
+                    //- td(data-title="'retweeted_status_mid'") {{tweet.retweeted_status_mid}}
+                    td(data-title="'deleted_last_seen'") {{tweet.deleted_last_seen}}
+                    td(data-title="'permission_denied'") {{tweet.permission_denied}}

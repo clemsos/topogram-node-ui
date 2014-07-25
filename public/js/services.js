@@ -62,22 +62,61 @@ app.factory('searchService',
             host: $location.host() + ":9200"
         });
 
+        /*
+        * Given an index,a term, give count and results.
+        *
+        * Returns a promise.
+        */
+        var search = function(index,term) {
+          var deferred = $q.defer();
+          client.search({
+            "index": index,
+            "type" : 'tweet',
+            "body": {
+              "query" : {
+                "match": {
+                    text: term
+                }
+              },
+              "facets" : {
+                  "histogram" : {
+                      "date_histogram" : {
+                          "key_field" : "created_at",
+                          "interval" : "hour"
+                      }
+                  }
+              }
+            }
+          }).then(function (result) {
+              var ii = 0, hits_in, hits_out = [];
+                hits_in = (result.hits || {}).hits || [];
+                for(;ii < hits_in.length; ii++){
+                    hits_out.push(hits_in[ii]._source);
+                }
+
+                deferred.resolve({
+                  "tweets":hits_out,
+                  "total":result.hits.total,
+                  "histogram":result.facets.histogram.entries
+                });
+          }, deferred.reject);
+          return deferred.promise;
+        }
 
         /**
-         * Given a term and an offset, load another round of 10 results.
+         * Given an index, a term and an offset, load another round of 10 results.
          *
          * Returns a promise.
          */
-        var search = function(term, offset){
+        var loadMore = function(index, term, offset){
             var deferred = $q.defer();
             var query = {
                 "match": {
                     "_all": term
                 }
             };
-
             client.search({
-                "index": 'weiboscope_39_40',
+                "index": index,
                 "type": 'tweet',
                 "body": {
                     "size": 10,
@@ -101,37 +140,32 @@ app.factory('searchService',
             return deferred.promise;
         };
 
-        /*
-        * Given a term, count results.
-        *
-        * Returns a promise.
-        */
-        // var count = function(term) {
+        /**
+         * Given nothing.
+         *
+         * Returns a list of indices.
+         */
+        var indexes = function(callback){
+          var deferred = $q.defer();
 
-        //   var deferred = $q.defer();
-        //   client.search({
-        //     "index": 'weiboscope_39_40',
-        //     "type" : 'tweet',
-        //     "body": {
-        //       "query" : {
-        //         "match": {
-        //             text: term
-        //         }
-        //       }
-        //     }
-        //   }).then(function (result) {
-        //       // console.log(result);
-        //       // D3 code goes here.
-        //       // deferred.resolve("ha");
-        //   }, deferred.reject);
-        
-        //   return deferred.promise;
-
-        // }
+          client.indices.getAliases(function(err,resp) {
+            if (err) {
+                console.log(err);
+                return err;
+            } else {
+              var indices=[];
+              for(var index in resp){
+                   indices.push(index);
+              }
+              callback(indices);
+            }
+          });
+        }
 
         return {
-            "search": search
-            // "count": count
+            "search": search,
+            "loadMore": loadMore,
+            "indexes" :indexes
         };
     }]
 );

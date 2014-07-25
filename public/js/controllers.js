@@ -63,17 +63,9 @@ app.controller('searchCtrl',
     ['searchService', '$scope', '$location', function(tweets, $scope, $location){
         
         // Provide some nice initial choices
-        var initChoices = [
-            "rendang",
-            "nasi goreng",
-            "pad thai",
-            "pizza",
-            "lasagne",
-            "ice cream",
-            "schnitzel",
-            "hummous"
-        ];
-        var idx = Math.floor(Math.random() * initChoices.length);
+        
+
+        $scope.indices=[]
 
         // Initialize the scope defaults.
         $scope.tweets = [];        // An array of recipe results to display
@@ -82,7 +74,8 @@ app.controller('searchCtrl',
         $scope.totalResults=0 // All tweets matching the query
 
         // And, a random search term to start if none was present on page load.
-        $scope.searchTerm = $location.search().q || initChoices[idx];
+        $scope.searchTerm = $location.search().q || "hi";
+        $scope.index= $location.search().index || "test";
 
         /**
          * A fresh search. Reset the scope variables to their defaults, set
@@ -92,8 +85,10 @@ app.controller('searchCtrl',
             $scope.page = 0;
             $scope.tweets = [];
             $scope.allResults = false;
-            $location.search({'q': $scope.searchTerm});
-            $scope.loadMore();
+            $location.search({'q': $scope.searchTerm,
+                              "index":$scope.index});
+            // $scope.loadMore();
+            $scope.searchFirst();
         };
 
         /**
@@ -103,10 +98,7 @@ app.controller('searchCtrl',
          */
         $scope.loadMore = function(){
           tweets
-            .search($scope.searchTerm, $scope.page++).then(function(results){
-              
-              $scope.totalResults=results.total;
-              
+            .loadMore($scope.index, $scope.searchTerm, $scope.page++).then(function(results){
               if(results.tweets.length !== 10){
                   $scope.allResults = true;
               }
@@ -118,8 +110,41 @@ app.controller('searchCtrl',
             })
         };
 
+        $scope.searchFirst= function(){
+          tweets.search($scope.index,$scope.searchTerm).then(function(results){
+
+            $scope.totalResults=results.total;
+            
+            if(results.tweets.length !== 10){
+                $scope.allResults = true;
+            }
+
+            var ii = 0;
+            for(;ii < results.tweets.length; ii++){
+                $scope.tweets.push(results.tweets[ii]);
+            }
+
+            // console.log(results.histogram);
+
+            if(results.histogram.length){
+              $scope.start=results.histogram[0].time;
+              $scope.end=results.histogram[results.histogram.length-1].time;
+              $scope.timeData=results.histogram;
+            }
+
+
+          });
+        };
+
+        $scope.getIndices = function(){
+          tweets.indexes(function(indices){
+            $scope.indices=indices;
+          });
+        }
+
         // Load results on first run
-        $scope.loadMore();
+        $scope.searchFirst();
+        $scope.getIndices();
     }]
 );
 
@@ -247,13 +272,11 @@ app.controller('dataCtrl', function($scope,$http,$routeParams,$location,$timeout
 
   // // monitor time changes
   $scope.$watch('start', function(newStart, oldVal) {
-    // console.log(updatedStart);
+
     if (newStart!=undefined) {
       $scope.start=newStart; 
       $scope.updateTimeData();
       config.setStart(newStart)
-      // socket.emit('config', config.toJSON());
-
       $scope.updateData();
     }
   })
@@ -274,7 +297,7 @@ app.controller('dataCtrl', function($scope,$http,$routeParams,$location,$timeout
     $scope.timeSeriesData.forEach(function(d) {
         if(d.timestamp>$scope.start && d.timestamp<$scope.end) d.selected=true
         else d.selected=false
-        d.date=new Date(d.timestamp);
+        d.time=new Date(d.timestamp);
     });
   }
   
