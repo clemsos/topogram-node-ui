@@ -7,7 +7,7 @@
     # node should be installed
     nvm install v0.10.26
     npm install
-    npm -g install bower supervisor forever
+    npm -g install bower supervisor forever zerorpc
     bower install
     ./dev_start.sh
 

@@ -11,5 +11,6 @@
     , "monk" : "latest"
     , "d3" : "latest"
     ,"jade": ">= 0.0.1"
+    ,"zerorpc": "0.9.3"
   }
 }

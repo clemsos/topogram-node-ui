@@ -17,12 +17,19 @@ Visualisation engine for Topogram
     var routes = require('./routes'),
         api = require('./routes/api');
 
+    var zerorpc = require("zerorpc"); // communication with Python
+
+    var miner = new zerorpc.Client();
+    miner.connect("tcp://127.0.0.1:4242");
+
+    miner.invoke("test_com", {"name":"ls58"}, function(error, res, more) {
+        console.log(res);
+    });
+
     // Hook Socket.io into Express
     // var io = require('socket.io').listen(server);
 
 // ## CONFIGURATION
-
-    // TODO: Migrate to [Express 4.x](https://github.com/visionmedia/express/wiki/Migrating-from-3.x-to-4.x)
 
     app.use(function(err, req, res, next){
       console.error(err.stack);
@@ -52,6 +59,7 @@ Visualisation engine for Topogram
         app.use(express.errorHandler());
     });
 
+    
 // ## ROUTES
 
     // routes
