@@ -79,6 +79,7 @@ app.controller('searchCtrl',
         $scope.tweets = [];        // An array of recipe results to display
         $scope.page = 0;            // A counter to keep track of our current page
         $scope.allResults = false;  // Whether or not all results have been found.
+        $scope.totalResults=0 // All tweets matching the query
 
         // And, a random search term to start if none was present on page load.
         $scope.searchTerm = $location.search().q || initChoices[idx];
@@ -101,16 +102,20 @@ app.controller('searchCtrl',
          * whether all results have been returned (i.e. were 10 results returned?)
          */
         $scope.loadMore = function(){
-            tweets.search($scope.searchTerm, $scope.page++).then(function(results){
-                if(results.length !== 10){
-                    $scope.allResults = true;
-                }
+          tweets
+            .search($scope.searchTerm, $scope.page++).then(function(results){
+              
+              $scope.totalResults=results.total;
+              
+              if(results.tweets.length !== 10){
+                  $scope.allResults = true;
+              }
 
-                var ii = 0;
-                for(;ii < results.length; ii++){
-                    $scope.tweets.push(results[ii]);
-                }
-            });
+              var ii = 0;
+              for(;ii < results.tweets.length; ii++){
+                  $scope.tweets.push(results.tweets[ii]);
+              }
+            })
         };
 
         // Load results on first run

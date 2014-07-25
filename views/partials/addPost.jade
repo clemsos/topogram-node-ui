@@ -10,6 +10,7 @@ section(class='searchField')
 section.results
     .no-recipes(ng-hide='tweets.length') No results
     article.recipe(ng-cloak)
+        h3 Total : {{ totalResults }} results.
         table.table.table-striped.table-condensed(ng-table='')
             tbody
             tr(ng-repeat='tweet in tweets')
@@ -24,7 +25,6 @@ section.results
                 //- td(data-title="'retweeted_status_mid'") {{tweet.retweeted_status_mid}}
                 td(data-title="'deleted_last_seen'") {{tweet.deleted_last_seen}}
                 td(data-title="'permission_denied'") {{tweet.permission_denied}}
-
 
 .load-more(ng-cloak='', ng-hide='allResults')
     a(ng-click='loadMore()') More...
