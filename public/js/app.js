@@ -5,7 +5,8 @@ var app = angular.module('topogram',
     [
     'ngResource', 
     'ngRoute',
-    'elasticsearch'
+    'elasticsearch',
+    'ngTable'
     ]);
 
 app.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {

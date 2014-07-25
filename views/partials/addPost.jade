@@ -8,10 +8,23 @@ section(class='searchField')
 
 
 section.results
-  .no-recipes(ng-hide='tweets.length') No results
-  article.recipe(ng-cloak, ng-repeat='tweet in tweets')
-    p
-      | {{tweet}}
+    .no-recipes(ng-hide='tweets.length') No results
+    article.recipe(ng-cloak)
+        table.table.table-striped.table-condensed(ng-table='')
+            tbody
+            tr(ng-repeat='tweet in tweets')
+                td(data-title="'mid'") {{tweet.mid}}
+                td(data-title="'text'") {{tweet.text}}
+                td(data-title="'created_at'") {{tweet.created_at | date:'medium'}}
+                td(data-title="'uid'") {{tweet.uid}}
+                td(data-title="'source'") {{tweet.source}}
+                td(data-title="'image'") {{tweet.image}}
+                td(data-title="'geo'") {{tweet.geo}}
+                //- td(data-title="'retweeted_uid'") {{tweet.retweeted_uid}}
+                //- td(data-title="'retweeted_status_mid'") {{tweet.retweeted_status_mid}}
+                td(data-title="'deleted_last_seen'") {{tweet.deleted_last_seen}}
+                td(data-title="'permission_denied'") {{tweet.permission_denied}}
+
 
 .load-more(ng-cloak='', ng-hide='allResults')
     a(ng-click='loadMore()') More...
