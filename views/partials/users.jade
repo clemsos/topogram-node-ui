@@ -1,0 +1,10 @@
+.row(ng-controller='userCtrl')
+  .col-xs-9.col-sm-9
+    .user-container(users='', start='start', end='end')
+  .col-xs-3.col-sm-3
+    a.btn-sm.btn-default.btn-save.btn-save-png(type='button', ng-click='saveUsers(); $event.preventDefault()')
+      span.glyphicon.glyphicon-save
+      | Save
+    p
+      small Hit Shift+C to save
+    .pie-container

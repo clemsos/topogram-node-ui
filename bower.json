@@ -9,12 +9,20 @@
   "keywords": [
     "elasticsearch"
   ],
+  "directory": "public/lib",
   "license": "Apache 2.0",
   "private": true,
   "dependencies": {
     "elasticsearch": "~2.2.0",
     "angular": "~1.2.6",
+    "angular-resource": "~1.2.6",
+    "angular-route": "~1.2.6",
     "bootstrap": "~3.2.0",
-    "d3":
+    "d3": "3",
+    "d3-tip": "latest",
+    "queue-async": "latest",
+    "colorbrewer":"latest",
+    "bootstrap-slider":"latest",
+    "topojson":"latest"
   }
 }

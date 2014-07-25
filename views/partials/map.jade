@@ -1,0 +1,25 @@
+.row(ng-controller='geoCtrl')
+  .col-xs-9.col-sm-9
+    .geo-container(map='', start='start', end='end', geo-data='geoData')
+  .col-xs-3.col-sm-3
+    h5 User distribution by province
+    .geo-pie-container
+    p
+      a.btn-sm.btn-default(href='#', ng-click='toggleInternals(); $event.preventDefault()')
+        span.glyphicon.glyphicon-play
+        | Show/Hide Geo Internal Edges
+    p
+      a.btn-sm.btn-default(href='#', ng-click='toggleGeoEdges(); $event.preventDefault()')
+        span.glyphicon.glyphicon-play
+        | Show/Hide Geo Edges
+    .province-clusters-legend
+    h5 Province word
+    .province-words
+    a.btn-sm.btn-default.btn-save.btn-save-png(type='button', ng-click='saveGeo(); $event.preventDefault()')
+      span.glyphicon.glyphicon-save
+      | Save Map
+    p
+      small Hit Shift+G to save
+    a.btn-sm.btn-default.btn-save.btn-save-png(type='button', ng-click='savePie(); $event.preventDefault()')
+      span.glyphicon.glyphicon-save
+      | Save Pie

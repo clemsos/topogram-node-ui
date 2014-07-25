@@ -2,16 +2,9 @@ section
   h3 {{post.name}}
   div {{post.text}}
 
-   #viz.container-fluid(ng-controller='dataCtrl')
-    div(ng-include='"/partials/timeline.html"')
-    div(ng-include='"/partials/map.html"')
-    div(ng-include='"/partials/words.html"')
-    div(ng-include='"/partials/users.html"')
-    
-    script(src="/libs/bootstrap-slider.js")
-    script(src="/libs/d3.v3.min.js")
-    script(src="/libs/d3tooltip.js")
-    script(src="/libs/queue.v1.min.js")
-    script(src="/libs/colorbrewer.v1.min.js")
-    script(src="/libs/topojson.v1.min.js")
-    script(src="/libs/simg.js")
+  #viz.container-fluid(ng-controller='dataCtrl')
+    div(ng-include='"/partials/timeline"')
+    div(ng-include='"/partials/map"')
+    div(ng-include='"/partials/words"')
+    div(ng-include='"/partials/users"')
+

@@ -13,6 +13,8 @@ results
 public/data
 _data
 doc
+lib
+libs
 
 node_modules
 
