@@ -210,8 +210,13 @@ exports.provincescount=function(req, res){
 
 // POST
 exports.addMeme = function (req, res) {
-  data.memes.push(req.body);
-  res.json(req.body);
+  var body=req.body;
+  console.log(body);
+  memes.insert(body, function (err, bug) {
+        if (err) res.json(500, err);
+        else res.json(201, bug);
+    });
+  // data.memes.push(req.body);
 };
 
 // PUT
@@ -229,13 +234,10 @@ exports.editMeme = function (req, res) {
 // DELETE
 exports.deleteMeme = function (req, res) {
   var id = req.params.id;
-
-  if (id >= 0 && id < data.memes.length) {
-    data.memes.splice(id, 1);
-    res.json(true);
-  } else {
-    res.json(false);
-  }
+  memes.remove({_id: id}, function(err){
+    if (err) res.json(500, err);
+    else res.json(204, {"id": id});
+  });
 };
 
 // STATIC

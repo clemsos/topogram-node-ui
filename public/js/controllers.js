@@ -30,8 +30,10 @@ function DeletePostCtrl($scope, $http, $location, $routeParams) {
     });
 
   $scope.deletePost = function () {
+    console.log('delete',$routeParams.id);
     $http.delete('/api/meme/' + $routeParams.id).
       success(function(data) {
+        console.log("deleted",data);
         $location.url('/');
       });
   };
@@ -41,18 +43,6 @@ function DeletePostCtrl($scope, $http, $location, $routeParams) {
   };
 }
 
-function AddPostCtrl($scope, $http, $location) {
-  $scope.form = {};
-  /*
-  $scope.submitPost = function () {
-    $http.post('/api/meme', $scope.form).
-      success(function(data) {
-        $location.path('/');
-      });
-  };
-  */
-}
-
 
 /**
  * Search interact with the UI.
@@ -60,27 +50,37 @@ function AddPostCtrl($scope, $http, $location) {
 
 
 app.controller('searchCtrl',
-    ['searchService', '$scope', '$location', function(tweets, $scope, $location){
+    ['searchService', "$http",'$scope', '$location', function(tweets, $http, $scope, $location){
         
-        // Provide some nice initial choices
-        
-
-        $scope.indices=[]
 
         // Initialize the scope defaults.
-        $scope.tweets = [];        // An array of recipe results to display
+        $scope.indices=[]         // list of elasticsearch indices
+        $scope.tweets = [];        // An array of messages results to display
         $scope.page = 0;            // A counter to keep track of our current page
         $scope.allResults = false;  // Whether or not all results have been found.
         $scope.totalResults=0 // All tweets matching the query
 
-        // And, a random search term to start if none was present on page load.
+        // Query term, plus a default one
         $scope.searchTerm = $location.search().q || "hi";
         $scope.index= $location.search().index || "test";
 
-        /**
-         * A fresh search. Reset the scope variables to their defaults, set
-         * the q query parameter, and load more results.
-         */
+
+        $scope.submitPost = function () {
+          $scope.meme={
+              "name": $scope.searchTerm+"_"+$scope.index,
+              "term": $scope.searchTerm,
+              "index": $scope.index
+          };
+
+          $http.post('/api/meme', $scope.meme).
+            success(function(data) {
+              // $location.path('/');
+              console.log(data);
+              console.log("saved");
+          });
+        };
+
+
         $scope.search = function(){
             $scope.page = 0;
             $scope.tweets = [];
@@ -110,6 +110,10 @@ app.controller('searchCtrl',
             })
         };
 
+        /**
+         * A fresh search. Reset the scope variables to their defaults, set
+         * the q query parameter.
+         */
         $scope.searchFirst= function(){
           tweets.search($scope.index,$scope.searchTerm).then(function(results){
 
@@ -135,6 +139,10 @@ app.controller('searchCtrl',
 
           });
         };
+
+        /**
+        * Get a list of all indices
+        */
 
         $scope.getIndices = function(){
           tweets.indexes(function(indices){
