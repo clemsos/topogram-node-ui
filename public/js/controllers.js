@@ -33,8 +33,9 @@ function DeletePostCtrl($scope, $http, $location, $routeParams) {
     console.log('delete',$routeParams.id);
     $http.delete('/api/meme/' + $routeParams.id).
       success(function(data) {
-        console.log("deleted",data);
+        // console.log("deleted",data);
         $location.url('/');
+        flash.success="Post succesfully deleted"
       });
   };
 
