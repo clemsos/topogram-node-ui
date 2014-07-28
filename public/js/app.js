@@ -6,9 +6,12 @@ var app = angular.module('topogram',
     'ngResource', 
     'ngRoute',
     'elasticsearch',
-    'ngTable'
+    'ngTable',
+    'angular-flash.service', 
+    'angular-flash.flash-alert-directive'
     ]);
 
+// routes
 app.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
         $routeProvider.
       when('/', {
@@ -39,3 +42,8 @@ app.config(['$routeProvider', '$locationProvider', function($routeProvider, $loc
         .html5Mode(true)
         .hashPrefix('!');
 }]);
+
+// fix for bootstrap 3
+app.config(['flashProvider', function(flashProvider) {
+  flashProvider.errorClassnames.push('alert-danger');
+}])

@@ -24,6 +24,7 @@
     "colorbrewer":"latest",
     "bootstrap-slider":"latest",
     "topojson":"latest",
-    "ng-table":"latest"
+    "ng-table":"latest",
+    "angular-flash" :"latest"
   }
 }

@@ -79,6 +79,22 @@ body
         | blabla
   
   #main.container(role="main")
+    .fade(flash-alert='success', active-class='in alert')
+      button.close(type='button', ng-click='hide()') ×
+      strong.alert-heading OK : 
+      span.alert-message {{flash.message}}
+
+    // Subscribe to error flash messages.
+    .fade(flash-alert='error', active-class='in alert')
+      button.close(type='button', ng-click='hide()') ×
+      strong.alert-heading Error : 
+      span.alert-message {{flash.message}}
+
+    .fade(flash-alert='info', active-class='in alert')
+      button.close(type='button', ng-click='hide()') ×
+      strong.alert-heading Info : 
+      span.alert-message {{flash.message}}
+
     block body
 
 script(type='text/javascript', src='/lib/jquery/dist/jquery.min.js')

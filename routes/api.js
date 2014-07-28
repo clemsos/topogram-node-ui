@@ -10,12 +10,15 @@ var db = require('monk')('localhost/'+config.TOPOGRAM_MONGO_DB)
 var d3 = require('d3');
 var zerorpc = require("zerorpc"); // communication with Python
 
+// for CSV export
+var json2csv = require('json2csv');
+
 var miner = new zerorpc.Client();
 miner.connect("tcp://127.0.0.1:4242");
 
-// for CSV export
-var json2csv = require('json2csv');
-var spawn = require('child_process').spawn;
+miner.on("error", function(error) {
+    console.error("RPC client error:", error);
+});
 
 
 // GET
@@ -117,7 +120,8 @@ exports.es2mongo = function(req,res) {
         miner.invoke("es2mongo", 
           { "_id": doc[0]._id.toString() }, 
           function(error, resp, more) {
-            // console.log(error, resp);
+            console.log(error);
+            if(error) res.json(503,error);
             res.json(resp);
           });
   });

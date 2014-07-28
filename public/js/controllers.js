@@ -233,7 +233,19 @@ app.controller('navCtrl', function($scope,config,memeService){
 })
 
 // Data
-app.controller("ReadPostCtrl", function ($scope, $route, $http, $routeParams) {
+app.controller("ReadPostCtrl", function ($scope, $route, $http, $routeParams, flash) {
+
+  // Publish a success flash
+  // flash.success = 'Do it live!';
+
+  // Publish a error flash
+  // flash.error = 'Fail!';
+
+  // Publish an info flash to the `alert-1` subscriber
+  // flash.to('alert-1').info = 'Only for alert 1';
+
+  // The `flash-alert` directive hides itself when if receives falsey flash messages of any type
+  // flash.error = '';
 
   // console.log($routeParams.id);
   var _id=$routeParams.id;
@@ -244,41 +256,40 @@ app.controller("ReadPostCtrl", function ($scope, $route, $http, $routeParams) {
       $scope.csvfile = data.csv;
   });
 
-
   $scope.getData= function(_format) {
     console.log('Collecting data from Es...', _format);
+    flash.info = 'Collecting data from search engine...';
     var url='/api/meme/' + $routeParams.id+"/"+_format
-    console.log(url);
-    $http.get(url).
+    
+    $http({method: 'GET', url: url}).
       success(function(res) {
         console.log(res);
         $scope.log=res.log;
         $route.reload();
-        // $scope.post = data.meme;
+        flash.success = 'Data succesfully collected!';
+      })
+      .error(function(err){
+          flash.error= err.name + ", "+err.message ;
       });
-  }
+    }
 
   $scope.analyzeData = function(){
     console.log('Analyze data...');
+    flash.info='Analyzing'+$scope.post.messages+' messages...'
     var url='/api/meme/' + $routeParams.id+"/process"
-    console.log(url);
-    $http.get(url).
-      success(function(res) {
-        console.log(res);
-        // $scope.post = data.meme;
-    });
+    // console.log(url);
+
+    $http({method: 'GET', url: url})
+      .success(function(res) {
+          console.log(res);
+          $route.reload();
+          flash.success="Analyze done!"
+          // $scope.post = data.meme;
+      })
+      .error(function(err){
+          flash.error= err.name + ", "+err.message ;
+      });;
   }
-
-  $scope.getCSV = function () {
-    var url="/api/meme/"+ $routeParams.id+"/download.csv"
-    $http.get(url).
-      success(function(res) {
-        console.log(res);
-        // $scope.post = data.meme;
-    });
-  }
-
-
 
 });
 
