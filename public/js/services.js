@@ -70,34 +70,32 @@ app.factory('searchService',
         var search = function(index,term) {
           var deferred = $q.defer();
           client.search({
-            "index": index,
-            "type" : 'tweet',
-            "body": {
-              "query" : {
-                "match": {
-                    text: term
-                }
-              },
-              "facets" : {
-                  "histogram" : {
-                      "date_histogram" : {
-                          "key_field" : "created_at",
-                          "interval" : "hour"
-                      }
-                  }
-              }
-            }
-          }).then(function (result) {
+            explain: true,
+            q: term,
+            size:10,
+            index:index,
+            type : 'tweet',
+            body: {
+                "facets" : {
+                    "histogram" : {
+                        "date_histogram" : {
+                            "key_field" : "created_at",
+                            "interval" : "hour"
+                        }
+                    }
+                }}
+          }
+          ).then(function (result) {
               var ii = 0, hits_in, hits_out = [];
                 hits_in = (result.hits || {}).hits || [];
                 for(;ii < hits_in.length; ii++){
                     hits_out.push(hits_in[ii]._source);
                 }
-
+                console.log(result);
                 deferred.resolve({
                   "tweets":hits_out,
-                  "total":result.hits.total,
-                  "histogram":result.facets.histogram.entries
+                  "total":result.hits.total ,
+                   "histogram":result.facets.histogram.entries
                 });
           }, deferred.reject);
           return deferred.promise;

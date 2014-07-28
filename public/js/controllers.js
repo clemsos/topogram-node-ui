@@ -86,7 +86,8 @@ app.controller('searchCtrl',
             $scope.tweets = [];
             $scope.allResults = false;
             $location.search({'q': $scope.searchTerm,
-                              "index":$scope.index});
+                              "index":$scope.index}
+                              );
             // $scope.loadMore();
             $scope.searchFirst();
         };
@@ -95,7 +96,8 @@ app.controller('searchCtrl',
          * Load the next page of results, incrementing the page counter.
          * When query is finished, push results onto $scope.recipes and decide
          * whether all results have been returned (i.e. were 10 results returned?)
-         */
+        */
+
         $scope.loadMore = function(){
           tweets
             .loadMore($scope.index, $scope.searchTerm, $scope.page++).then(function(results){
@@ -130,12 +132,12 @@ app.controller('searchCtrl',
 
             // console.log(results.histogram);
 
+            
             if(results.histogram.length){
               $scope.start=results.histogram[0].time;
               $scope.end=results.histogram[results.histogram.length-1].time;
               $scope.timeData=results.histogram;
             }
-
 
           });
         };
