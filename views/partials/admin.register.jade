@@ -1,0 +1,21 @@
+section.post
+  ol.breadcrumb
+    li
+      a(href='#/') Blog
+    li.active Register
+  form.form-horizontal(role='form')
+    .form-group
+      label.col-sm-4.control-label(for='inputUsername') Username
+      .col-sm-4
+        input#inputUsername.form-control(type='text', placeholder='Username', ng-model='register.username')
+    .form-group
+      label.col-sm-4.control-label(for='inputPassword') Password
+      .col-sm-4
+        input#inputPassword.form-control(type='password', placeholder='Password', ng-model='register.password')
+    .form-group
+      label.col-sm-4.control-label(for='inputPasswordConfirmation') Password Confirmation
+      .col-sm-4
+        input#inputPasswordConfirmation.form-control(type='password', placeholder='Password', ng-model='register.passwordConfirmation')
+    .form-group
+      .col-sm-offset-4.col-sm-10
+        button.btn.btn-default(type='submit', ng-click='register(register.username, register.password, register.passwordConfirmation)') Register
