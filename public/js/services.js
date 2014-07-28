@@ -70,7 +70,7 @@ app.factory('searchService',
         var search = function(index,term) {
           var deferred = $q.defer();
           client.search({
-            explain: true,
+            // explain: true,
             q: term,
             size:10,
             index:index,
@@ -113,13 +113,14 @@ app.factory('searchService',
                     "_all": term
                 }
             };
+
             client.search({
                 "index": index,
                 "type": 'tweet',
+                q: term,
                 "body": {
                     "size": 10,
-                    "from": (offset || 0) * 10,
-                    "query": query
+                    "from": (offset || 0) * 10
                 }
             }).then(function(result) {
               
