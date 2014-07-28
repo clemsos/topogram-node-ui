@@ -549,3 +549,46 @@ app.controller('userCtrl', function($scope,$http,config,dataService){
     sv.download(fn);
   }
 })
+
+
+app.controller('AdminUserCtrl', ['$scope', '$location', '$window', 'UserService', 'AuthenticationService',
+    function AdminUserCtrl($scope, $location, $window, UserService, AuthenticationService) {
+ 
+        //Admin User Controller (login, logout)
+        $scope.logIn = function logIn(username, password) {
+            if (username !== undefined && password !== undefined) {
+ 
+                UserService.logIn(username, password).success(function(data) {
+                    AuthenticationService.isLogged = true;
+                    $window.sessionStorage.token = data.token;
+                    $location.path("/admin");
+                }).error(function(status, data) {
+                    console.log(status);
+                    console.log(data);
+                });
+            }
+        }
+ 
+        $scope.logout = function logout() {
+            if (AuthenticationService.isLogged) {
+                AuthenticationService.isLogged = false;
+                delete $window.sessionStorage.token;
+                $location.path("/");
+            }
+        }
+
+        $scope.register = function register(username, password, passwordConfirm) {
+            if (AuthenticationService.isAuthenticated) {
+                $location.path("/admin");
+            }
+            else {
+                UserService.register(username, password, passwordConfirm).success(function(data) {
+                    $location.path("/admin/login");
+                }).error(function(status, data) {
+                    console.log(status);
+                    console.log(data);
+                });
+            }
+        }
+    }
+]);

@@ -15,8 +15,14 @@ Visualisation engine for Topogram
     var moment = require('moment');
 
     var routes = require('./routes'),
-        api = require('./routes/api');
+        api = require('./routes/api')
+        users = require('./routes/users');
 
+    var jwt = require('express-jwt');
+    var morgan  = require('morgan'); // logger
+
+    // var tokenManager = require('./config/token_manager');
+    // var secret = require('./config/secret');
     // Hook Socket.io into Express
     // var io = require('socket.io').listen(server);
 
@@ -36,6 +42,7 @@ Visualisation engine for Topogram
         });
         
         app.use(express.bodyParser());
+        app.use(morgan());
         app.use(express.methodOverride());
         app.use(express.static(__dirname + '/public'));
 
@@ -56,7 +63,20 @@ Visualisation engine for Topogram
     app.get('/', routes.index);
     app.get('/partials/:name', routes.partials);
 
+    // Define a middleware function to be used for every secured routes 
+    var auth = function(req, res, next){ 
+        if (!req.isAuthenticated()) res.send(401); 
+        else next(); 
+    }; 
+
     // JSON API
+
+    // users
+    // app.get('/users', auth, users.list);
+    app.post('/login', users.login);
+    app.get('/logout', users.logout);
+    //Create a new user
+    app.post('/register', users.register); 
 
     // memes
     app.get('/api/memes', api.memes);

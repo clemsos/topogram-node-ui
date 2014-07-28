@@ -13,5 +13,10 @@
     ,"jade": ">= 0.0.1"
     ,"zerorpc": "0.9.3"
     ,"json2csv" :"latest"
+    ,"bcrypt": "~0.7.8"
+    ,"mongoose": "*"
+    ,"express-jwt": "*"
+    ,"morgan" : "*"
+    ,"jsonwebtoken":"0.2.5"
   }
 }

@@ -93,11 +93,6 @@ app.factory('searchService',
                 for(;ii < hits_in.length; ii++){
                     hits_out.push(hits_in[ii]._source);
                 }
-                
-                console.log(result);
-                console.log(deferred);
-                console.log(client);
-
                 deferred.resolve({
                   "tweets":hits_out,
                   "total":result.hits.total ,
@@ -209,3 +204,43 @@ app.factory('socket', function ($rootScope) {
     };
   });
   */
+
+app.factory('AuthenticationService', function() {
+    var auth = {
+        isLogged: false
+    }
+    return auth;
+});
+
+app.factory('UserService', function($http) {
+  return {
+      logIn: function(username, password) {
+        return $http.post('/login', {username: username, password: password});
+      },
+
+      register: function(username, password, passwordConfirmation) {
+        return $http.post('/register', {username: username, password: password, passwordConfirmation: passwordConfirmation });
+      },
+
+      logOut: function() {
+        return $http.get('/user/logout');
+      }
+  }
+});
+
+// service to intercept traffic
+app.factory('TokenInterceptor', function ($q, $window, AuthenticationService) {
+    return {
+        request: function (config) {
+            config.headers = config.headers || {};
+            if ($window.sessionStorage.token) {
+                config.headers.Authorization = 'Bearer ' + $window.sessionStorage.token;
+            }
+            return config;
+        },
+ 
+        response: function (response) {
+            return response || $q.when(response);
+        }
+    };
+});

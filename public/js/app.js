@@ -16,23 +16,41 @@ app.config(['$routeProvider', '$locationProvider', function($routeProvider, $loc
         $routeProvider.
       when('/', {
         templateUrl: 'partials/index',
-        controller: IndexCtrl
+        controller: IndexCtrl,
+        access: { requiredLogin: false }
       }).
       when('/addPost', {
         templateUrl: 'partials/addPost',
-        controller: "AddPostCtrl"
+        controller: "AddPostCtrl",
+        access: { requiredLogin: true }
       }).
       when('/readPost/:id', {
         templateUrl: 'partials/readPost',
-        controller: "ReadPostCtrl"
+        controller: "ReadPostCtrl",
+        access: { requiredLogin: false }
       }).
       when('/editPost/:id', {
         templateUrl: 'partials/editPost',
-        controller: EditPostCtrl
+        controller: EditPostCtrl,
+        access: { requiredLogin: true }
       }).
       when('/deletePost/:id', {
         templateUrl: 'partials/deletePost',
-        controller: DeletePostCtrl
+        controller: DeletePostCtrl,
+        access: { requiredLogin: true }
+      }).
+      when('/admin/register', {
+            templateUrl: 'partials/admin.register.jade',
+            controller: 'AdminUserCtrl'
+      }).
+      when('/admin/login', {
+            templateUrl: 'partials/admin.login.jade',
+            controller: 'AdminUserCtrl'
+      }).
+      when('/admin/logout', {
+          templateUrl: 'partials/admin.logout.jade',
+          controller: 'AdminUserCtrl',
+          access: { requiredLogin: true } 
       }).
       otherwise({
         redirectTo: '/'
@@ -42,6 +60,19 @@ app.config(['$routeProvider', '$locationProvider', function($routeProvider, $loc
         .html5Mode(true)
         .hashPrefix('!');
 }]);
+
+app.run(function($rootScope, $location, AuthenticationService) {
+    $rootScope.$on("$routeChangeStart", function(event, nextRoute, currentRoute) {
+        if (nextRoute.access.requiredLogin && !AuthenticationService.isLogged) {
+            $location.path("/admin/login");
+        }
+    });
+});
+
+// apply interceptor to whole app
+app.config(function ($httpProvider) {
+    $httpProvider.interceptors.push('TokenInterceptor');
+});
 
 // fix for bootstrap 3
 app.config(['flashProvider', function(flashProvider) {
