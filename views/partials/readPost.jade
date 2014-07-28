@@ -16,7 +16,9 @@ section
 
   div(ng-if='post.messages != 0')
     p {{post.messages}} messages in the DB.
-    a(href="#")  Download as CSV
+    a(target='_blank', href="/api/meme/{{post._id}}/download.csv", download="{{post.name}}.csv")  Download messages as CSV
+    //- href='data:attachment/csv,' + csvString
+    //- download= 'myFile.csv';
   
     div(ng-if='post.times == 0')
       button.btn.btn-primary(ng-click='analyzeData()') Analyze data

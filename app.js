@@ -67,6 +67,7 @@ Visualisation engine for Topogram
 
     // memes data
     app.get('/api/meme/:id/status', api.status);
+    app.get('/api/meme/:id/download.csv', api.toCSV);
     app.get('/api/meme/:id/csv', api.es2csv);
     app.get('/api/meme/:id/mongo', api.es2mongo);
     app.get('/api/meme/:id/process', api.process);

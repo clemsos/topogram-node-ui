@@ -267,9 +267,15 @@ app.controller("ReadPostCtrl", function ($scope, $route, $http, $routeParams) {
         console.log(res);
         // $scope.post = data.meme;
     });
+  }
 
-
-
+  $scope.getCSV = function () {
+    var url="/api/meme/"+ $routeParams.id+"/download.csv"
+    $http.get(url).
+      success(function(res) {
+        console.log(res);
+        // $scope.post = data.meme;
+    });
   }
 
 

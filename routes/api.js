@@ -13,10 +13,15 @@ var zerorpc = require("zerorpc"); // communication with Python
 var miner = new zerorpc.Client();
 miner.connect("tcp://127.0.0.1:4242");
 
+// for CSV export
+var json2csv = require('json2csv');
+var spawn = require('child_process').spawn;
+
+
 // GET
 exports.memes = function (req, res) {
   memes.find({}, { fields : {"name": 1, "title":1, "description":1, "created_at":1 }, sort : { _id : -1 } },     
-   function (err, doc) {
+    function (err, doc) {
           // console.log(doc);
           if(doc==null) res.send("meme doesn't exist")
           else res.send({ memes : doc})
@@ -112,7 +117,7 @@ exports.es2mongo = function(req,res) {
         miner.invoke("es2mongo", 
           { "_id": doc[0]._id.toString() }, 
           function(error, resp, more) {
-            console.log(error, resp);
+            // console.log(error, resp);
             res.json(resp);
           });
   });
@@ -279,7 +284,7 @@ exports.geoclusters=function(req, res){
     memes.find({"_id":req.params.id}, 
       { fields : {"geoclusters": 1 },limit : 1, sort : { _id : -1 } },     
       function (err, doc) {
-        console.log(doc);
+        // console.log(doc);
         if(doc==null) res.json(false)
         else res.send(doc[0].geoclusters)
     });
@@ -290,10 +295,34 @@ exports.provincescount=function(req, res){
     memes.find({"_id":req.params.id}, 
       { fields : {"provincesCount": 1 },limit : 1, sort : { _id : -1 } },     
       function (err, doc) {
-        console.log(doc);
+        // console.log(doc);
         if(doc==null) res.json(false)
         else res.send(doc[0].provincesCount)
     });
+}
+
+// export to CSV
+exports.toCSV = function (req,res) {
+    var id = req.params.id;
+    memes.find({"_id" : id }, { fields : {"messages": 1}, sort : { _id : -1 } },
+        function (err, doc) {
+          // console.log(doc[0].messages);
+          if(doc==null) res.json(500, err);
+          else {
+            var messages=doc[0].messages;
+            json2csv({data: messages, fields: ["mid","retweeted_status_mid","uid","retweeted_uid","source","image","text","geo","created_at","deleted_last_seen","permission_denied"]}, function(error, csv) {
+              if(error) console.log(error)
+
+              res.contentType('csv');
+              res.send(csv);
+              
+              console.log('file saved');
+            });
+
+
+            }  
+              
+      });
 }
 
 // POST
@@ -327,6 +356,8 @@ exports.deleteMeme = function (req, res) {
     else res.json(204, {"id": id});
   });
 };
+
+
 
 // STATIC
 // Calculate weighted results for Weibo population
