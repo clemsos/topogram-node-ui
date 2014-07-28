@@ -23,7 +23,7 @@ function EditPostCtrl($scope, $http, $location, $routeParams) {
   };
 }
 
-function DeletePostCtrl($scope, $http, $location, $routeParams) {
+function DeletePostCtrl($scope, $http, $location, $routeParams, flash) {
   $http.get('/api/meme/' + $routeParams.id).
     success(function(data) {
       $scope.post = data.post;
