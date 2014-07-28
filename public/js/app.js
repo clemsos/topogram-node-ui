@@ -17,11 +17,11 @@ app.config(['$routeProvider', '$locationProvider', function($routeProvider, $loc
       }).
       when('/addPost', {
         templateUrl: 'partials/addPost',
-        controller: "searchCtrl"
+        controller: "AddPostCtrl"
       }).
       when('/readPost/:id', {
         templateUrl: 'partials/readPost',
-        controller: ReadPostCtrl
+        controller: "ReadPostCtrl"
       }).
       when('/editPost/:id', {
         templateUrl: 'partials/editPost',

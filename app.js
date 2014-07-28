@@ -17,15 +17,6 @@ Visualisation engine for Topogram
     var routes = require('./routes'),
         api = require('./routes/api');
 
-    var zerorpc = require("zerorpc"); // communication with Python
-
-    var miner = new zerorpc.Client();
-    miner.connect("tcp://127.0.0.1:4242");
-
-    miner.invoke("test_com", {"name":"ls58"}, function(error, res, more) {
-        console.log(res);
-    });
-
     // Hook Socket.io into Express
     // var io = require('socket.io').listen(server);
 
@@ -58,7 +49,6 @@ Visualisation engine for Topogram
     app.configure('production', function(){
         app.use(express.errorHandler());
     });
-
     
 // ## ROUTES
 
@@ -76,6 +66,11 @@ Visualisation engine for Topogram
     app.delete('/api/meme/:id', api.deleteMeme);
 
     // memes data
+    app.get('/api/meme/:id/status', api.status);
+    app.get('/api/meme/:id/csv', api.es2csv);
+    app.get('/api/meme/:id/mongo', api.es2mongo);
+    app.get('/api/meme/:id/process', api.process);
+    // app.get('/api/meme/:id/csv/download', api.csvlink);
     app.get('/api/meme/:id/times', api.times);
     app.get('/api/meme/:id/frames/:start/:end', api.frames);
     app.get("/api/meme/:id/geoclusters", api.geoclusters);

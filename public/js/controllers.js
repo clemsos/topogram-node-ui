@@ -48,8 +48,7 @@ function DeletePostCtrl($scope, $http, $location, $routeParams) {
  * Search interact with the UI.
  */
 
-
-app.controller('searchCtrl',
+app.controller('AddPostCtrl',
     ['searchService', "$http",'$scope', '$location', function(tweets, $http, $scope, $location){
         
 
@@ -61,25 +60,46 @@ app.controller('searchCtrl',
         $scope.totalResults=0 // All tweets matching the query
 
         // Query term, plus a default one
-        $scope.searchTerm = $location.search().q || "hi";
-        $scope.index= $location.search().index || "test";
+        $scope.searchTerm = $location.search().q;
+        $scope.index= $location.search().index;
 
+        // default 
+        $scope.title="";
+        $scope.description="";
+        $scope.slug="default";
 
-        $scope.submitPost = function () {
-          $scope.meme={
-              "name": $scope.searchTerm+"_"+$scope.index,
-              "term": $scope.searchTerm,
-              "index": $scope.index
-          };
+        $scope.submitMeme = function (isValid) {
+          console.log(isValid);
+          if(isValid) {
+            $scope.meme={
+                "name": $scope.slug,
+                "term": $scope.searchTerm,
+                "index": $scope.index,
+                "title": $scope.title,
+                "description": $scope.description,
+                "created_at" : new Date()
+            };
 
-          $http.post('/api/meme', $scope.meme).
-            success(function(data) {
-              // $location.path('/');
-              console.log(data);
-              console.log("saved");
-          });
+            $http.post('/api/meme', $scope.meme).
+              success(function(data) {
+                $location.path('/readPost/'+data._id);
+                console.log(data);
+                console.log("saved");
+                $('.modal.in').modal('hide') 
+            });
+          }
         };
 
+
+        $scope.slugify = function(Text) {
+            if(Text)
+              $scope.slug=Text
+                .toLowerCase()
+                .replace(/ /g,'-')
+                .replace(/[^\w-]+/g,'')
+                ;
+            console.log($scope.slug);
+        }
 
         $scope.search = function(){
             $scope.page = 0;
@@ -130,8 +150,8 @@ app.controller('searchCtrl',
                 $scope.tweets.push(results.tweets[ii]);
             }
 
-            // console.log(results.histogram);
-
+            
+            $scope.title=$scope.searchTerm;
             
             if(results.histogram.length){
               $scope.start=results.histogram[0].time;
@@ -213,13 +233,47 @@ app.controller('navCtrl', function($scope,config,memeService){
 })
 
 // Data
-function ReadPostCtrl($scope, $http, $routeParams) {
+app.controller("ReadPostCtrl", function ($scope, $http, $routeParams) {
+
   // console.log($routeParams.id);
+  var _id=$routeParams.id;
   $http.get('/api/meme/' + $routeParams.id).
     success(function(data) {
-      $scope.post = data.meme;
+      console.log(data);
+      $scope.post = data;
+      $scope.csvfile = data.csv;
+  });
+
+
+  $scope.getData= function(_format) {
+    console.log('Collecting data from Es...', _format);
+    var url='/api/meme/' + $routeParams.id+"/"+_format
+    console.log(url);
+    $http.get(url).
+      success(function(res) {
+        console.log(res);
+        $scope.log=res.log;
+        // $scope.post = data.meme;
+      });
+  }
+
+  $scope.analyzeData = function(){
+    console.log('Analyze data...');
+    var url='/api/meme/' + $routeParams.id+"/process"
+    console.log(url);
+    $http.get(url).
+      success(function(res) {
+        console.log(res);
+        // $scope.post = data.meme;
     });
-}
+
+
+
+  }
+
+
+
+});
 
 app.controller('dataCtrl', function($scope,$http,$routeParams,$location,$timeout,config,dataService){
 

@@ -1,39 +1,88 @@
-.container
-    h2 Search for messages
-    //- label(for='title') Keywords: 
-
-    section(class='searchField')
+h2 Search for messages
+//- label(for='title') Keywords: 
+.row
+    section.col-md-8(class='searchField')
 
         form.form-inline(ng-submit='search()', role="form")
             span.help-block Use operators AND, OR and quotes for more precise queries 
                 a(href="http://lucene.apache.org/core/2_9_4/queryparsersyntax.html",target="_blank") [help]
             input(ng-model='searchTerm', type="search",name='title',class="form-control")
-            select.form-control(ng-model="index",ng-options="index for index in indices")
+            select.form-control(
+                ng-model="index",
+                ng-options="index for index in indices"
+                )
+
 
             button(class="btn btn-default", type="submit" ) Get results
 
-    button(class="btn btn-primary", type="submit", ng-click="submitPost()" ) Save Data
+    section.col-md-4.utils
+        p
+            button.btn.btn-primary(data-toggle='modal', data-target='#saveModal')
+                | Save query
+
+section.results
+    h3.no-recipes(ng-hide='tweets.length') No results
+    article.recipe(ng-hide='!tweets.length')
+        h3 Total : {{ totalResults }} results
+            small  in {{ index }}
+        timeserie(timeserie="" time-data="timeData" start="start" end="end" meme-name="searchTerm")
+        .load-more(ng-cloak='', ng-hide='allResults')
+            a.btn.btn-default(ng-click='loadMore()') View more results...
+        table.table.table-striped.table-condensed(ng-table='')
+            tbody
+            tr(ng-repeat='tweet in tweets')
+                td(data-title="'mid'", sortable="'mid'") {{tweet.mid}}
+                td(data-title="'text'") {{tweet.text}}
+                td(data-title="'created_at'",sortable="'created_at'") {{tweet.created_at | date:'medium'}}
+                td(data-title="'uid'") {{tweet.uid}}
+                td(data-title="'source'") {{tweet.source}}
+                td(data-title="'image'") {{tweet.image}}
+                td(data-title="'geo'") {{tweet.geo}}
+                //- td(data-title="'retweeted_uid'") {{tweet.retweeted_uid}}
+                //- td(data-title="'retweeted_status_mid'") {{tweet.retweeted_status_mid}}
+                td(data-title="'deleted_last_seen'") {{tweet.deleted_last_seen}}
+                td(data-title="'permission_denied'") {{tweet.permission_denied}}
+
+// Modal
+#saveModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
+  .modal-dialog
+    .modal-content
+      .modal-header
+        button.close(type='button', data-dismiss='modal')
+          span(aria-hidden='true') ×
+          span.sr-only Close
+        h4#myModalLabel.modal-title Save search 
+            small for later use
+
+      .modal-body
+        form.form-horizontal(role='form',name="memeForm" ng-submit="submitMeme(memeForm.$valid)" )
+          .form-group
+            label.col-sm-2.control-label(for='inputQuery') Query
+            .col-sm-10
+              input#inputQuery.form-control(disabled,placeholder='{{searchTerm}}')
+
+            label.col-sm-2.control-label(for='inputIndex') Index
+            .col-sm-10
+              input#inputIndex.form-control(disabled,placeholder='{{index}}')
+            
+          .form-group(ng-class="{ 'has-error' : memeForm.title.$invalid && !memeForm.title.$pristine }")
+            label.col-sm-2.control-label(for='inputTitle') Title
+            .col-sm-10
+              input#inputTitle.form-control(type='text', placeholder='Title...',ng-model="title", ng-change='slugify(title)', ng-required='true', ng-minlength=3)
+            p.help-block(ng-show='memeForm.title.$invalid && !memeForm.title.$pristine') A title is required.
+
+          .form-group
+            label.col-sm-2.control-label(for='inputSlug') Nickname
+            .col-sm-10
+              input#inputSlug.form-control(type='text', placeholder='{{slug}}')
+            
+
+          .form-group
+            label.col-sm-2.control-label(for='imputDesc') Description
+            .col-sm-10
+              textarea#imputDesc.form-control(placeholder='{{description}}')
 
 
-    section.results
-        h3.no-recipes(ng-hide='tweets.length') No results
-        article.recipe(ng-hide='!tweets.length')
-            h3 Total : {{ totalResults }} results
-                small  in {{ index }}
-            timeserie(timeserie="" time-data="timeData" start="start" end="end" meme-name="searchTerm")
-            .load-more(ng-cloak='', ng-hide='allResults')
-                a.btn.btn-default(ng-click='loadMore()') View more results...
-            table.table.table-striped.table-condensed(ng-table='')
-                tbody
-                tr(ng-repeat='tweet in tweets')
-                    td(data-title="'mid'", sortable="'mid'") {{tweet.mid}}
-                    td(data-title="'text'") {{tweet.text}}
-                    td(data-title="'created_at'",sortable="'created_at'") {{tweet.created_at | date:'medium'}}
-                    td(data-title="'uid'") {{tweet.uid}}
-                    td(data-title="'source'") {{tweet.source}}
-                    td(data-title="'image'") {{tweet.image}}
-                    td(data-title="'geo'") {{tweet.geo}}
-                    //- td(data-title="'retweeted_uid'") {{tweet.retweeted_uid}}
-                    //- td(data-title="'retweeted_status_mid'") {{tweet.retweeted_status_mid}}
-                    td(data-title="'deleted_last_seen'") {{tweet.deleted_last_seen}}
-                    td(data-title="'permission_denied'") {{tweet.permission_denied}}
+          .modal-footer
+            button.btn.btn-default(type='button', data-dismiss='modal') Close
+            button.btn.btn-primary(type='submit',ng-disabled="memeForm.$invalid") Save changes

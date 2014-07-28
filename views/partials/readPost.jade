@@ -1,10 +1,36 @@
 section
   h3 {{post.name}}
-  div {{post.text}}
+  div {{post.description}}
 
-  #viz.container-fluid(ng-controller='dataCtrl')
-    div(ng-include='"/partials/timeline"')
-    div(ng-include='"/partials/map"')
-    div(ng-include='"/partials/words"')
-    div(ng-include='"/partials/users"')
+  dl.dl-horizontal
+    dt Creation date
+    dd {{post.created_at | date:medium}}
+    dt Search query
+    dd {{post.term}} in {{post.index}}
+
+
+  //- button.btn.btn-primary(ng-click='getData("csv")') Data as CSV
+  
+  div(ng-if='post.messages == 0')
+    button.btn.btn-primary(ng-click='getData("mongo")') Extract data
+
+  div(ng-if='post.messages != 0')
+    p {{post.messages}} messages in the DB.
+    a(href="#")  Download as CSV
+  
+    div(ng-if='post.times == 0')
+      button.btn.btn-primary(ng-click='analyzeData()') Analyze data
+    div(ng-if='post.times != 0')
+      p {{post.times}} 
+      a(href="#")  See visualization
+
+
+section.results
+  pre {{log}}
+  
+  //- #viz.container-fluid(ng-controller='dataCtrl')
+  //-   div(ng-include='"/partials/timeline"')
+  //-   div(ng-include='"/partials/map"')
+  //-   div(ng-include='"/partials/words"')
+  //-   div(ng-include='"/partials/users"')
 

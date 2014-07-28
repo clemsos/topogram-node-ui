@@ -1,9 +1,20 @@
-p There are {{posts.length}} posts
-div(ng-repeat='post in posts')
-  h3 {{post.name}}
-  div {{post.text}}
-  a(href='/readPost/{{post._id}}') More
-  |  - 
-  a(href='/editPost/{{post._id}}') Edit
-  |  - 
-  a(href='/deletePost/{{post._id}}') Delete
+h2 Index of memes
+p There are {{posts.length}} memes
+
+table.table.table-striped(ng-table='')
+    tbody
+      tr(ng-repeat='post in posts')
+        td(data-title="'title'", sortable="'title'") 
+            a(href='/readPost/{{post._id}}',role='button') {{post.title}}
+        td(data-title="'description'") {{post.description}}
+        td(data-title="'slug'",sortable="'slug'") 
+            a(href='/readPost/{{post._id}}',role='button') {{post.name}}
+        td(data-title="'created_at'",sortable="'created_at'") {{post.created_at | date:'medium'}}
+        td(data-title="'modified_at'",sortable="'modified_at'") {{post.modified_at | date:'medium'}}
+        td(data-title="'Modify'")
+            a.btn.btn-default.btn-sm(href='/editPost/{{post._id}}',role='button', disabled) Edit
+        td(data-title="'Delete'")
+            a.btn.btn-primary.btn-sm(href='/deletePost/{{post._id}}',role='button') Delete
+
+  
+  

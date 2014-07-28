@@ -8,12 +8,16 @@ var db = require('monk')('localhost/'+config.TOPOGRAM_MONGO_DB)
     , memes = db.get('memes');
 
 var d3 = require('d3');
+var zerorpc = require("zerorpc"); // communication with Python
+
+var miner = new zerorpc.Client();
+miner.connect("tcp://127.0.0.1:4242");
 
 // GET
 exports.memes = function (req, res) {
-  memes.find({}, { fields : {"name": 1 }, sort : { _id : -1 } },     
+  memes.find({}, { fields : {"name": 1, "title":1, "description":1, "created_at":1 }, sort : { _id : -1 } },     
    function (err, doc) {
-          console.log(doc);
+          // console.log(doc);
           if(doc==null) res.send("meme doesn't exist")
           else res.send({ memes : doc})
   });
@@ -24,11 +28,95 @@ exports.meme = function (req, res) {
   memes.find({"_id":id}, { limit : 1, sort : { _id : -1 } },     
    function (err, doc) {
       if(doc==null) res.json(false)
-      else res.json({
-        meme: doc[0]
-      });
+      else {
+        var hasMsg=0, 
+            hasTimes=0;
+        if("messages" in doc[0]) hasMsg=doc[0].messages.length;
+        if("times" in doc[0]) hasTimes=doc[0].times.length;
+
+        res.json({
+              // meme: doc[0],
+              "_id"      : doc[0]._id,
+              "title"    : doc[0].title,
+              "name"     : doc[0].name,
+              "term"     : doc[0].term,
+              "index"     : doc[0].index,
+              "messages" : hasMsg,
+              "times"    : hasTimes,
+              "created_at": doc[0].created_at
+            });}
   });
 };
+
+exports.status =function (req, res) {
+  var id = req.params.id;
+  memes.find(
+    {"_id":id}, 
+    { fields : {"times": 1, "messages":1, "created_at":1 } , limit : 1, sort : { _id : -1 } },     
+   function (err, doc) {
+      if(doc==null) res.json(false)
+      else {
+        var hasMsg=false, 
+            hasTimes=false;
+        if("messages" in doc[0]) hasMsg=true;
+        if("times" in doc[0]) hasTimes=true;
+        res.json(201, {
+        "messages": hasMsg,
+        "times": hasTimes,
+        "created_at": doc[0].created_at
+        })
+      }
+  });
+}
+
+exports.process = function(req, res) {
+  var id = req.params.id;
+
+  memes.find({"_id":id}, { limit : 1, sort : { _id : -1 } },     
+   function (err, doc) {
+      if(doc==null) res.json(false)
+      else 
+        miner.invoke("processData", 
+          { "_id": doc[0]._id.toString() }, 
+          function(error, resp, more) {
+            console.log(error, resp);
+            res.json(resp);
+          });
+  });
+}
+
+exports.es2csv = function(req,res) {
+  var id = req.params.id;
+
+  memes.find({"_id":id}, { limit : 1, sort : { _id : -1 } },     
+   function (err, doc) {
+      console.log(doc);
+      if(doc==null) res.json(false)
+      else 
+        miner.invoke("es2csv", 
+          doc[0], 
+          function(error, resp, more) {
+            console.log(resp);
+            res.json(resp);
+          });
+  });
+}
+
+exports.es2mongo = function(req,res) {
+  var id = req.params.id;
+
+  memes.find({"_id":id}, { limit : 1, sort : { _id : -1 } },     
+   function (err, doc) {
+      if(doc==null) res.json(false)
+      else 
+        miner.invoke("es2mongo", 
+          { "_id": doc[0]._id.toString() }, 
+          function(error, resp, more) {
+            console.log(error, resp);
+            res.json(resp);
+          });
+  });
+}
 
 exports.times=function(req, res){    
     memes.findOne({"_id":req.params.id}, 
@@ -212,11 +300,11 @@ exports.provincescount=function(req, res){
 exports.addMeme = function (req, res) {
   var body=req.body;
   console.log(body);
-  memes.insert(body, function (err, bug) {
+  memes.insert(body, function (err, meme) {
+        console.log(meme);
         if (err) res.json(500, err);
-        else res.json(201, bug);
+        else res.json(201, meme);
     });
-  // data.memes.push(req.body);
 };
 
 // PUT

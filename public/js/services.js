@@ -71,6 +71,8 @@ app.factory('searchService',
           var deferred = $q.defer();
           client.search({
             // explain: true,
+            version:true,
+            // stats :
             q: term,
             size:10,
             index:index,
@@ -91,11 +93,15 @@ app.factory('searchService',
                 for(;ii < hits_in.length; ii++){
                     hits_out.push(hits_in[ii]._source);
                 }
+                
                 console.log(result);
+                console.log(deferred);
+                console.log(client);
+
                 deferred.resolve({
                   "tweets":hits_out,
                   "total":result.hits.total ,
-                   "histogram":result.facets.histogram.entries
+                  "histogram":result.facets.histogram.entries
                 });
           }, deferred.reject);
           return deferred.promise;
