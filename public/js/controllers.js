@@ -233,13 +233,13 @@ app.controller('navCtrl', function($scope,config,memeService){
 })
 
 // Data
-app.controller("ReadPostCtrl", function ($scope, $http, $routeParams) {
+app.controller("ReadPostCtrl", function ($scope, $route, $http, $routeParams) {
 
   // console.log($routeParams.id);
   var _id=$routeParams.id;
   $http.get('/api/meme/' + $routeParams.id).
     success(function(data) {
-      console.log(data);
+      // console.log(data);
       $scope.post = data;
       $scope.csvfile = data.csv;
   });
@@ -253,6 +253,7 @@ app.controller("ReadPostCtrl", function ($scope, $http, $routeParams) {
       success(function(res) {
         console.log(res);
         $scope.log=res.log;
+        $route.reload();
         // $scope.post = data.meme;
       });
   }

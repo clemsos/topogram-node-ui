@@ -32,7 +32,7 @@ exports.meme = function (req, res) {
         var hasMsg=0, 
             hasTimes=0;
         if("messages" in doc[0]) hasMsg=doc[0].messages.length;
-        if("times" in doc[0]) hasTimes=doc[0].times.length;
+        if("timeframes" in doc[0]) hasTimes=doc[0].timeframes.length;
 
         res.json({
               // meme: doc[0],
@@ -59,7 +59,7 @@ exports.status =function (req, res) {
         var hasMsg=false, 
             hasTimes=false;
         if("messages" in doc[0]) hasMsg=true;
-        if("times" in doc[0]) hasTimes=true;
+        if("timeframes" in doc[0]) hasTimes=true;
         res.json(201, {
         "messages": hasMsg,
         "times": hasTimes,
@@ -79,7 +79,7 @@ exports.process = function(req, res) {
         miner.invoke("processData", 
           { "_id": doc[0]._id.toString() }, 
           function(error, resp, more) {
-            console.log(error, resp);
+            console.log(resp);
             res.json(resp);
           });
   });
@@ -122,8 +122,8 @@ exports.times=function(req, res){
     memes.findOne({"_id":req.params.id}, 
       {limit : 1, sort : { _id : -1 } }, 
       function (err, doc) {
-          if(doc==null) res.send("meme doesn't exist")
-          else res.send(doc.data.map(function(d){
+          if(doc==null) res.json(500, err)
+          else res.send(doc.timeframes.map(function(d){
               return {"count":d.count, "timestamp":d.time}
           }))
     });
@@ -138,14 +138,14 @@ exports.frames=function(req, res){
 
     memes.find({"_id":id}, {limit : 1, sort : { _id : -1 } }, 
         function (err, doc) {  
-            console.log(doc[0]);
+            // console.log(doc[0]);
             var data=[];
-            for (var i = 0; i < doc[0].data.length; i++) {
-                var d=doc[0].data[i];
+            for (var i = 0; i < doc[0].timeframes.length; i++) {
+                var d=doc[0].timeframes[i];
                 if(d.time>(start) && d.time<(end)) data.push(d.data)
             }
             
-            console.log(req.params,data.length+" frames");
+            // console.log(req.params,data.length+" frames");
             var dataService={}
                 dataService.users={}, 
                 dataService.words={}, 

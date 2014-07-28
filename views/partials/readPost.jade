@@ -21,16 +21,10 @@ section
     div(ng-if='post.times == 0')
       button.btn.btn-primary(ng-click='analyzeData()') Analyze data
     div(ng-if='post.times != 0')
-      p {{post.times}} 
-      a(href="#")  See visualization
-
-
-section.results
-  pre {{log}}
-  
-  //- #viz.container-fluid(ng-controller='dataCtrl')
-  //-   div(ng-include='"/partials/timeline"')
-  //-   div(ng-include='"/partials/map"')
-  //-   div(ng-include='"/partials/words"')
-  //-   div(ng-include='"/partials/users"')
+      p {{post.times}} timeframes
+      #viz.container-fluid(ng-controller='dataCtrl')
+        div(ng-include='"/partials/timeline"')
+        div(ng-include='"/partials/map"')
+        div(ng-include='"/partials/words"')
+        div(ng-include='"/partials/users"')
 
