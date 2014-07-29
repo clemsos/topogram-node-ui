@@ -13,31 +13,41 @@ var app = angular.module('topogram',
 
 // routes
 app.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
-        $routeProvider.
+      $routeProvider.
       when('/', {
         templateUrl: 'partials/index',
         controller: IndexCtrl,
-        access: { requiredLogin: false }
-      }).
-      when('/addPost', {
-        templateUrl: 'partials/addPost',
-        controller: "AddPostCtrl",
-        access: { requiredLogin: true }
+        access: { requiredAuthentication: false }
       }).
       when('/readPost/:id', {
         templateUrl: 'partials/readPost',
         controller: "ReadPostCtrl",
-        access: { requiredLogin: false }
+        access: { requiredAuthentication: true }
       }).
-      when('/editPost/:id', {
+      when('/admin', {
+        templateUrl: 'partials/index',
+        controller: IndexCtrl,
+        access: { requiredAuthentication: true }
+      }).
+      when('/admin/addPost', {
+        templateUrl: 'partials/addPost',
+        controller: "AddPostCtrl",
+        access: { requiredAuthentication: true }
+      }).
+      when('/admin/readPost/:id', {
+        templateUrl: 'partials/readPost',
+        controller: "ReadPostCtrl",
+        access: { requiredAuthentication: true }
+      }).
+      when('/admin/editPost/:id', {
         templateUrl: 'partials/editPost',
         controller: EditPostCtrl,
-        access: { requiredLogin: true }
+        access: { requiredAuthentication: true }
       }).
-      when('/deletePost/:id', {
+      when('/admin/deletePost/:id', {
         templateUrl: 'partials/deletePost',
         controller: DeletePostCtrl,
-        access: { requiredLogin: true }
+        access: { requiredAuthentication: true }
       }).
       when('/admin/register', {
             templateUrl: 'partials/admin.register.jade',
@@ -50,7 +60,7 @@ app.config(['$routeProvider', '$locationProvider', function($routeProvider, $loc
       when('/admin/logout', {
           templateUrl: 'partials/admin.logout.jade',
           controller: 'AdminUserCtrl',
-          access: { requiredLogin: true } 
+          access: { requiredAuthentication: true } 
       }).
       otherwise({
         redirectTo: '/'
@@ -61,9 +71,12 @@ app.config(['$routeProvider', '$locationProvider', function($routeProvider, $loc
         .hashPrefix('!');
 }]);
 
-app.run(function($rootScope, $location, AuthenticationService) {
+app.run(function($rootScope, $location, $window, AuthenticationService) {
     $rootScope.$on("$routeChangeStart", function(event, nextRoute, currentRoute) {
-        if (nextRoute.access.requiredLogin && !AuthenticationService.isLogged) {
+        //redirect only if both isAuthenticated is false and no token is set
+        if (nextRoute != null && nextRoute.access != null && nextRoute.access.requiredAuthentication 
+            && !AuthenticationService.isAuthenticated && !$window.sessionStorage.token) {
+
             $location.path("/admin/login");
         }
     });

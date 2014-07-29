@@ -1,4 +1,5 @@
 // services.js
+var authorized_url="localhost:9200";
 
 app.factory('config', function($window) {
     return new Config();
@@ -230,13 +231,19 @@ app.factory('UserService', function($http) {
 
 // service to intercept traffic
 app.factory('TokenInterceptor', function ($q, $window, AuthenticationService) {
+    console.log($q);
     return {
         request: function (config) {
             config.headers = config.headers || {};
-            if ($window.sessionStorage.token) {
-                config.headers.Authorization = 'Bearer ' + $window.sessionStorage.token;
-            }
-            return config;
+
+              // TODO : dirty secu fix
+              if ($window.sessionStorage.token && (config.url.indexOf(authorized_url) == -1) ) {
+                console.log('ok');
+                  config.headers.Authorization = 'Bearer ' + $window.sessionStorage.token;
+              }
+              return config;
+
+
         },
  
         response: function (response) {

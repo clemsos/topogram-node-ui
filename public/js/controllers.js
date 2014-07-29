@@ -294,7 +294,7 @@ app.controller("ReadPostCtrl", function ($scope, $route, $http, $routeParams, fl
 
 });
 
-app.controller('dataCtrl', function($scope,$http,$routeParams,$location,$timeout,config,dataService){
+app.controller('dataCtrl', function ($scope,$http,$routeParams,$location,$timeout,config,dataService){
 
   var safename= "dufu";
   config.setName(safename);   //default
@@ -414,7 +414,7 @@ app.controller('dataCtrl', function($scope,$http,$routeParams,$location,$timeout
 });
 
 
-app.controller('geoCtrl', function($scope,$http,$routeParams,config,geoService,dataService){
+app.controller('geoCtrl', function ($scope,$http,$routeParams,config,geoService,dataService){
   
     $scope.centroidsOnMap=true;
     $scope.memeName=config.name
@@ -504,7 +504,7 @@ app.controller('geoCtrl', function($scope,$http,$routeParams,config,geoService,d
     }
 })
 
-app.controller('wordCtrl', function($scope,$http,config,dataService){
+app.controller('wordCtrl', function ($scope,$http,config,dataService){
 
   $scope.wordForceStarted=true;
   $scope.memeName=config.name;
@@ -526,7 +526,7 @@ app.controller('wordCtrl', function($scope,$http,config,dataService){
   }
 })
 
-app.controller('userCtrl', function($scope,$http,config,dataService){
+app.controller('userCtrl', function ($scope,$http,config,dataService){
 
   $scope.userForceStarted=true;
   $scope.memeName=config.name
@@ -551,8 +551,7 @@ app.controller('userCtrl', function($scope,$http,config,dataService){
 })
 
 
-app.controller('AdminUserCtrl', ['$scope', '$location', '$window', 'UserService', 'AuthenticationService',
-    function AdminUserCtrl($scope, $location, $window, UserService, AuthenticationService) {
+app.controller('AdminUserCtrl', function ($scope, $location, $window, UserService, AuthenticationService, flash) {
  
         //Admin User Controller (login, logout)
         $scope.logIn = function logIn(username, password) {
@@ -562,7 +561,9 @@ app.controller('AdminUserCtrl', ['$scope', '$location', '$window', 'UserService'
                     AuthenticationService.isLogged = true;
                     $window.sessionStorage.token = data.token;
                     $location.path("/admin");
+                    flash.success = "Login sucessful"
                 }).error(function(status, data) {
+                    flash.error= status;
                     console.log(status);
                     console.log(data);
                 });
@@ -590,5 +591,4 @@ app.controller('AdminUserCtrl', ['$scope', '$location', '$window', 'UserService'
                 });
             }
         }
-    }
-]);
+});

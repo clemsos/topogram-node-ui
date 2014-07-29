@@ -26,9 +26,11 @@ body
         li
           a.btn-memes(href='/') Memes
         li
-          a.btn-userlayout(href='/addPost')
+          a.btn-userlayout(href='/admin/addPost')
             // span.glyphicon.glyphicon-globe
             | Add a new Meme
+
+
         //- li
           //- a.btn-save(ng-click='saveAll()', type='button')
           //-   span.glyphicon.glyphicon-save
@@ -39,6 +41,20 @@ body
           a(data-toggle='collapse', data-target='#help') Help
         li
           a(data-toggle='collapse', data-target='#about') About
+
+
+        li.divider-vertical
+
+        //- - if (everyauth.user)
+        li
+          a(href='/admin/logout') Logout
+              
+        //- - else
+        li
+          a(href='/admin/register', title='Register') Register
+        li
+          a(href="/admin/login", data-toggle='dropdown') Login
+              
     .container-fluid
       #memes.panel-collapse.collapse
         .memelist.row.panel-body
