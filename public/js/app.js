@@ -14,53 +14,55 @@ var app = angular.module('topogram',
 // routes
 app.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
       $routeProvider.
+      // public zone
       when('/', {
-        templateUrl: 'partials/index',
+        templateUrl: 'partials/memes/index',
         controller: IndexCtrl,
         access: { requiredAuthentication: false }
       }).
-      when('/readPost/:id', {
-        templateUrl: 'partials/readPost',
+      when('/meme/:id', {
+        templateUrl: 'partials/memes/read',
         controller: "ReadPostCtrl",
-        access: { requiredAuthentication: true }
+        access: { requiredAuthentication: false }
       }).
+      // admin zone 
       when('/admin', {
-        templateUrl: 'partials/index',
+        templateUrl: 'partials/admin/index',
         controller: IndexCtrl,
         access: { requiredAuthentication: true }
       }).
       when('/admin/addPost', {
-        templateUrl: 'partials/addPost',
+        templateUrl: 'partials/admin/addPost',
         controller: "AddPostCtrl",
         access: { requiredAuthentication: true }
       }).
       when('/admin/readPost/:id', {
-        templateUrl: 'partials/readPost',
+        templateUrl: 'partials/admin/readPost',
         controller: "ReadPostCtrl",
         access: { requiredAuthentication: true }
       }).
       when('/admin/editPost/:id', {
-        templateUrl: 'partials/editPost',
+        templateUrl: 'partials/admin/editPost',
         controller: EditPostCtrl,
         access: { requiredAuthentication: true }
       }).
       when('/admin/deletePost/:id', {
-        templateUrl: 'partials/deletePost',
+        templateUrl: 'partials/admin/deletePost',
         controller: DeletePostCtrl,
         access: { requiredAuthentication: true }
       }).
       when('/admin/register', {
-            templateUrl: 'partials/admin.register.jade',
+            templateUrl: 'partials/admin/register.jade',
             controller: 'AdminUserCtrl'
       }).
       when('/admin/login', {
-            templateUrl: 'partials/admin.login.jade',
+            templateUrl: 'partials/admin/login.jade',
             controller: 'AdminUserCtrl'
       }).
       when('/admin/logout', {
-          templateUrl: 'partials/admin.logout.jade',
+          templateUrl: 'partials/admin/logout.jade',
           controller: 'AdminUserCtrl',
-          access: { requiredAuthentication: true } 
+          access: { requiredAuthentication: true }
       }).
       otherwise({
         redirectTo: '/'

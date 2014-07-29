@@ -6,7 +6,7 @@ var secretToken='aMdoeb5ed87zorRdkD6greDML81DcnrzeSD648ferFejmplx';
 
 var mongodbURL = 'mongodb://localhost/haha';
 var SALT_WORK_FACTOR=10;
-var INVITE_CODE="AreYouInvited";
+var INVITE_CODE="YouAreInvited";
 
 mongoose.connect(mongodbURL, mongodbOptions, function (err, res) {
     if (err) { 
@@ -99,19 +99,18 @@ exports.register = function(req, res) {
     var username = req.body.username || '';
     var password = req.body.password || '';
     var passwordConfirmation = req.body.passwordConfirmation || '';
-    var inviteCode = req.body.password || '';
+    var inviteToken = req.body.inviteToken || '';
 
-    if (username == '' || password == '' || password != passwordConfirmation || inviteCode) {
-        return res.send(400);
+    if (username == '' || password == '' || password != passwordConfirmation || inviteToken == '') {
+        return res.send(400, {"error":"Missing information"});
     }
 
-    console.log(inviteCode);
-    if(inviteCode != INVITE_CODE) return res.send(400);
+    if(inviteToken != INVITE_CODE) return res.send(400, {"error":"Wrong invite code"});
 
     var user = new userModel();
     user.username = username;
     user.password = password;
-    // console.log(username,password);
+
 
     user.save(function(err) {
         if (err) {

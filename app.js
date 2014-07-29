@@ -42,7 +42,7 @@ Visualisation engine for Topogram
         });
         
         app.use(express.bodyParser());
-        app.use(morgan());
+        // app.use(morgan());
         app.use(express.methodOverride());
         app.use(express.static(__dirname + '/public'));
 
@@ -62,6 +62,7 @@ Visualisation engine for Topogram
     // routes
     app.get('/', routes.index);
     app.get('/partials/:name', routes.partials);
+    app.get('/partials/:directory/:file', routes.subpartials);
 
     // Define a middleware function to be used for every secured routes 
     var auth = function(req, res, next){ 

@@ -1,7 +1,6 @@
 // controllers.js
 
 function IndexCtrl($scope, $http) {
-
   $http.get('/api/memes').
     success(function(data, status, headers, config) {
       $scope.posts = data.memes;
@@ -44,19 +43,13 @@ function DeletePostCtrl($scope, $http, $location, $routeParams, flash) {
   };
 }
 
-
-/**
- * Search interact with the UI.
- */
-
 app.controller('AddPostCtrl',
-    ['searchService', "$http",'$scope', '$location', function(tweets, $http, $scope, $location){
+    ['searchService', "$http",'$scope', '$location', 'flash', function(tweets, $http, $scope, $location, flash){
         
-
         // Initialize the scope defaults.
-        $scope.indices=[]         // list of elasticsearch indices
-        $scope.tweets = [];        // An array of messages results to display
-        $scope.page = 0;            // A counter to keep track of our current page
+        $scope.indices=[]       // list of elasticsearch indices
+        $scope.tweets = [];     // An array of messages results to display
+        $scope.page = 0;        // A counter to keep track of our current page
         $scope.allResults = false;  // Whether or not all results have been found.
         $scope.totalResults=0 // All tweets matching the query
 
@@ -85,7 +78,7 @@ app.controller('AddPostCtrl',
               success(function(data) {
                 $location.path('/readPost/'+data._id);
                 console.log(data);
-                console.log("saved");
+                flash.success = "Your content has been saved";
                 $('.modal.in').modal('hide') 
             });
           }
@@ -179,20 +172,16 @@ app.controller('AddPostCtrl',
     }]
 );
 
-
 // Menu
-app.controller('navCtrl', function($scope,config,memeService){
-  memeService.list.getData(function(memeList){ 
-    $scope.memeList=[];
-    memeList.memes.forEach(function(meme){
-       // limit list to some of the memes only
-       var memelist=['biaoge','thevoice','moyan','hougong', 'gangnam','sextape','dufu','ccp','yuanfang','qiegao']
-        if (memelist.indexOf(meme.safename)!=-1) $scope.memeList.push(meme)
-    });
-  })
+app.controller('navCtrl', function($scope,config,memeService,AuthenticationService){
 
+  $scope.isLogged= function() {
+    return AuthenticationService.isAuthenticated;
+  }
+
+  /*
   $('body').keydown(function (e) {
-      console.log(e.which);
+      // console.log(e.which);
       if(e.which==87 && e.shiftKey==true) $scope.saveWords() // W
       else if (e.which==71 && e.shiftKey==true) $scope.saveMap() // G
       else if (e.which==67 && e.shiftKey==true) $scope.saveUsers() //C
@@ -231,6 +220,7 @@ app.controller('navCtrl', function($scope,config,memeService){
     var fn="users_"+config.getFilename()
     sv.download(fn);
   }
+  */
 })
 
 // Data
@@ -291,7 +281,6 @@ app.controller("ReadPostCtrl", function ($scope, $route, $http, $routeParams, fl
           flash.error= err.name + ", "+err.message ;
       });;
   }
-
 });
 
 app.controller('dataCtrl', function ($scope,$http,$routeParams,$location,$timeout,config,dataService){
@@ -558,7 +547,7 @@ app.controller('AdminUserCtrl', function ($scope, $location, $window, UserServic
             if (username !== undefined && password !== undefined) {
  
                 UserService.logIn(username, password).success(function(data) {
-                    AuthenticationService.isLogged = true;
+                    AuthenticationService.isAuthenticated = true;
                     $window.sessionStorage.token = data.token;
                     $location.path("/admin");
                     flash.success = "Login sucessful"
@@ -570,24 +559,27 @@ app.controller('AdminUserCtrl', function ($scope, $location, $window, UserServic
             }
         }
  
-        $scope.logout = function logout() {
-            if (AuthenticationService.isLogged) {
-                AuthenticationService.isLogged = false;
-                delete $window.sessionStorage.token;
-                $location.path("/");
-            }
+        $scope.logOut = function logout() {
+          console.log('is logged : ',AuthenticationService.isAuthenticated);
+          if (AuthenticationService.isAuthenticated) {
+              AuthenticationService.isAuthenticated = false;
+              delete $window.sessionStorage.token;
+              $location.path("/");
+          }
         }
 
-        $scope.register = function register(username, password, passwordConfirm) {
+        $scope.register = function register(username, password, passwordConfirm, inviteToken) {
             if (AuthenticationService.isAuthenticated) {
                 $location.path("/admin");
             }
             else {
-                UserService.register(username, password, passwordConfirm).success(function(data) {
+                UserService.register(username, password, passwordConfirm,inviteToken).success(function(data) {
+                    flash.success = "Registering Succesful, welcome to Topogram !";
                     $location.path("/admin/login");
                 }).error(function(status, data) {
-                    console.log(status);
-                    console.log(data);
+                    flash.error = status;
+                    // console.log(status);
+                    // console.log(data);
                 });
             }
         }
