@@ -17,6 +17,4 @@ documentation http://nevir.github.io/groc/
 
 ## TODO
 
-    * API documentation
-    * refactor d3.js pie directive
-    * implement users
+    See issues in this rep
