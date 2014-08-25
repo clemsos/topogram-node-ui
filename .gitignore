@@ -26,3 +26,4 @@ dump*
 Capfile
 config/deploy/production.rb
 config/config.json
+config

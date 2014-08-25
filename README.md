@@ -15,6 +15,8 @@ The stack for the UI is based on node / angular / d3.js
 
     npm -g install bower supervisor forever zerorpc
     bower install
+
+    # create config file
     ./dev_start.sh
 
 
