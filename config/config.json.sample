@@ -1,5 +1,0 @@
-{
-    "TOPOGRAM_NODE_PORT": 3000,
-    "TOPOGRAM_MONGO_DB" : "weibodata",
-    "TOPOGRAM_TMP_DIR" : "/tmp/"
-}
