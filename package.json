@@ -17,6 +17,6 @@
     ,"mongoose": "*"
     ,"express-jwt": "*"
     ,"morgan" : "*"
-    ,"jsonwebtoken":"0.2.5"
+    ,"jsonwebtoken":"*"
   }
 }
